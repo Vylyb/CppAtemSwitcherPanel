@@ -33,24 +33,24 @@
 #include "afxwin.h"
 #include "afxcmn.h"
 
-#define INPUT_Black	0
-#define INPUT_C1	1
-#define INPUT_C2	2
-#define INPUT_C3	3
-#define INPUT_C4	4
-#define INPUT_C5	5
-#define INPUT_C6	6
-#define INPUT_Clean_Feed_1	16
-#define INPUT_Clean_Feed_2	17
-#define INPUT_Color_1	8
-#define INPUT_Color_2	9
-#define INPUT_Color_Bars	7
-#define INPUT_Media_Player_1	10
+#define INPUT_Black					0
+#define INPUT_C1					1
+#define INPUT_C2					2
+#define INPUT_C3					3
+#define INPUT_C4					4
+#define INPUT_C5					5
+#define INPUT_C6					6
+#define INPUT_Color_Bars			7
+#define INPUT_Color_1				8
+#define INPUT_Color_2				9
+#define INPUT_Media_Player_1		10
 #define INPUT_Media_Player_1_Key	11
-#define INPUT_Media_Player_2	12
+#define INPUT_Media_Player_2		12
 #define INPUT_Media_Player_2_Key	13
-#define INPUT_Preview	15
-#define INPUT_Program	14
+#define INPUT_Program				14
+#define INPUT_Preview				15
+#define INPUT_Clean_Feed_1			16
+#define INPUT_Clean_Feed_2			17
 
 #define AUDIO_INPUT_1	0
 #define AUDIO_INPUT_2	1
@@ -97,11 +97,9 @@ public:
 private:
 	void switcherConnected();
 	void switcherDisconnected();
-	void updatePopupButtonItems();
-	void updateProgramButtonSelection();
-	void updatePreviewButtonSelection();
 	void updateSliderPosition();
 	void updateTransitionFramesText();
+	void setInputGainSliderPosition(int inputID, double gain);
 	void updateFTBFramesText();
 	void setProgramInput(BMDSwitcherInputId id);
 	void setPreviewInput(BMDSwitcherInputId id);
@@ -122,8 +120,6 @@ private:
 	CEdit						mEditAddress;
 	CButton						mButtonConnect;
 	CEdit						mEditName;
-	CComboBox					mComboProgram;
-	CComboBox					mComboPreview;
 	CSliderCtrl					mSlider;
 	CButton						mButtonAuto;
 	CButton						mButtonCut;
@@ -143,7 +139,8 @@ private:
 	std::list<InputMonitor*>	mInputMonitors;
 	BOOL						mMoveSliderDownwards;
 	BOOL						mCurrentTransitionReachedHalfway;
-	double						sliderRange;
+	double						sliderRange,minGain,maxGain;
+	CFont						standardFont,enhancedFont;
 
 public:
 	afx_msg void OnBnClickedButtonProgInput9();

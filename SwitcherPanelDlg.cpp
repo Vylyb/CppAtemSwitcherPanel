@@ -461,8 +461,6 @@ void CSwitcherPanelDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_ADDRESS, mEditAddress);
 	DDX_Control(pDX, IDC_BUTTON_CONNECT, mButtonConnect);
 	DDX_Control(pDX, IDC_EDIT_NAME, mEditName);
-	DDX_Control(pDX, IDC_COMBO_PROGRAM, mComboProgram);
-	DDX_Control(pDX, IDC_COMBO_PREVIEW, mComboPreview);
 	DDX_Control(pDX, IDC_SLIDER, mSlider);
 	DDX_Control(pDX, IDC_BUTTON_AUTO, mButtonAuto);
 	DDX_Control(pDX, IDC_BUTTON_CUT, mButtonCut);
@@ -540,8 +538,6 @@ BEGIN_MESSAGE_MAP(CSwitcherPanelDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_AUTO, &CSwitcherPanelDlg::OnBnClickedAuto)
 	ON_BN_CLICKED(IDC_BUTTON_CUT, &CSwitcherPanelDlg::OnBnClickedCut)
 	ON_BN_CLICKED(IDC_BUTTON_FTB, &CSwitcherPanelDlg::OnBnClickedFTB)
-	ON_CBN_SELENDOK(IDC_COMBO_PROGRAM, &CSwitcherPanelDlg::OnProgramInputChanged)
-	ON_CBN_SELENDOK(IDC_COMBO_PREVIEW, &CSwitcherPanelDlg::OnPreviewInputChanged)
 
 	ON_MESSAGE(WM_MIX_EFFECT_BLOCK_PROGRAM_INPUT_CHANGED, OnMixEffectBlockProgramInputChanged)
 	ON_MESSAGE(WM_MIX_EFFECT_BLOCK_PREVIEW_INPUT_CHANGED, OnMixEffectBlockPreviewInputChanged)
@@ -608,6 +604,9 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 		goto bail;
 	}
 
+	standardFont.CreatePointFont(100, _T("Arial"));
+	enhancedFont.CreatePointFont(160, _T("Arial Black"));
+
 	mSwitcherDiscovery = NULL;
 	mSwitcher = NULL;
 	mMixEffectBlock = NULL;
@@ -628,6 +627,8 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 	}
 
 	sliderRange = 1000.0;
+	maxGain = 6.0;
+	minGain = 66.0;
 
 	mSlider.SetRange(0,sliderRange,TRUE);
 	mSliderMasterVolume.SetRange(0,sliderRange,TRUE);
@@ -733,18 +734,6 @@ void CSwitcherPanelDlg::setPreviewInput(BMDSwitcherInputId id)
 	addOutputLine(str);
 }
 
-void CSwitcherPanelDlg::OnProgramInputChanged()
-{
-	BMDSwitcherInputId inputId = mComboProgram.GetItemData(mComboProgram.GetCurSel());
-	mMixEffectBlock->SetInt(bmdSwitcherMixEffectBlockPropertyIdProgramInput, inputId);
-}
-
-void CSwitcherPanelDlg::OnPreviewInputChanged()
-{
-	BMDSwitcherInputId inputId = mComboPreview.GetItemData(mComboPreview.GetCurSel());
-	mMixEffectBlock->SetInt(bmdSwitcherMixEffectBlockPropertyIdPreviewInput, inputId);
-}
-
 void CSwitcherPanelDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	// Handle only the Slider events
@@ -753,15 +742,9 @@ void CSwitcherPanelDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 
 	double position = nPos / sliderRange;
 
-	if (pScrollBar == (CScrollBar *) &mSlider)
+	if (pScrollBar == (CScrollBar *) &mSliderMasterVolume)
 	{
-		if (mMoveSliderDownwards)
-			position = (sliderRange - nPos) / sliderRange;	// deal with flipped slider handle position
-		mMixEffectBlock->SetFloat(bmdSwitcherMixEffectBlockPropertyIdTransitionPosition, position);
-	}
-	else if (pScrollBar == (CScrollBar *) &mSliderMasterVolume)
-	{
-		position = 6.0 - position*66.0;
+		position = maxGain - position*minGain;
 		CString line;
 		line.Format(_T("%.2fdB"),position);
 		mEditMasterVolume.SetWindowTextW(line);
@@ -769,52 +752,59 @@ void CSwitcherPanelDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput1)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput1.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_1);
+		setInputGainSliderPosition(AUDIO_INPUT_1,position);
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput2)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput2.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_2);
+		setInputGainSliderPosition(AUDIO_INPUT_2,position);
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput3)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput3.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_3);
+		setInputGainSliderPosition(AUDIO_INPUT_3,position);
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput4)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput4.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_4);
+		setInputGainSliderPosition(AUDIO_INPUT_4,position);
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput5)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput5.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_5);
+		setInputGainSliderPosition(AUDIO_INPUT_5,position);
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput6)
 	{
-		position = 6.0 - position*66.0;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditGainInput6.SetWindowTextW(line);
-		setInputGain(position,AUDIO_INPUT_6);
+		setInputGainSliderPosition(AUDIO_INPUT_6,position);
 	}
+}
+
+void CSwitcherPanelDlg::setInputGainSliderPosition(int inputID,double gain)
+{
+	gain = maxGain - gain * minGain;
+	CString line;
+	line.Format(_T("%.2fdB"),gain);
+
+	switch(inputID)
+	{
+	case AUDIO_INPUT_1:
+		mEditGainInput1.SetWindowTextW(line);
+		break;
+	case AUDIO_INPUT_2:
+		mEditGainInput2.SetWindowTextW(line);
+		break;
+	case AUDIO_INPUT_3:
+		mEditGainInput3.SetWindowTextW(line);
+		break;
+	case AUDIO_INPUT_4:
+		mEditGainInput4.SetWindowTextW(line);
+		break;
+	case AUDIO_INPUT_5:
+		mEditGainInput5.SetWindowTextW(line);
+		break;
+	case AUDIO_INPUT_6:
+		mEditGainInput6.SetWindowTextW(line);
+		break;
+	}
+
+	setInputGain(gain,inputID);
 }
 
 void CSwitcherPanelDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
@@ -825,7 +815,13 @@ void CSwitcherPanelDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 
 	double position = nPos / sliderRange;			// convert to [0 .. 1] range
 
-	if (pScrollBar == (CScrollBar *) &mSliderMasterBalance)
+	if (pScrollBar == (CScrollBar *) &mSlider)
+	{
+		if (mMoveSliderDownwards)
+			position = (sliderRange - nPos) / sliderRange;	// deal with flipped slider handle position
+		mMixEffectBlock->SetFloat(bmdSwitcherMixEffectBlockPropertyIdTransitionPosition, position);
+	}
+	else if (pScrollBar == (CScrollBar *) &mSliderMasterBalance)
 	{
 		position = position * 2.0 - 1.0;
 		mAudioMixer->SetProgramOutBalance(position);
@@ -834,8 +830,6 @@ void CSwitcherPanelDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 		mEditMasterBalance.SetWindowTextW(line);
 	}
 }
-
-
 
 void CSwitcherPanelDlg::switcherConnected()
 {
@@ -941,10 +935,11 @@ void CSwitcherPanelDlg::switcherConnected()
 	/////////////////////////////
 
 	mixEffectBlockBoxSetEnabled(TRUE);
-	updatePopupButtonItems();
 	updateSliderPosition();
 	updateTransitionFramesText();
 	updateFTBFramesText();
+	OnMixEffectBlockProgramInputChanged(0,0);
+	OnMixEffectBlockPreviewInputChanged(0,0);
 
 finish:
 	if (iterator)
@@ -985,80 +980,6 @@ void CSwitcherPanelDlg::switcherDisconnected()
 
 }
 
-//
-// GUI updates
-//
-void CSwitcherPanelDlg::updatePopupButtonItems()
-{
-	HRESULT result;
-	IBMDSwitcherInputIterator* inputIterator = NULL;
-	IBMDSwitcherInput* input = NULL;
-
-	result = mSwitcher->CreateIterator(IID_IBMDSwitcherInputIterator, (void**)&inputIterator);
-	if (FAILED(result))
-	{
-		TRACE(_T("Could not create IBMDSwitcherInputIterator iterator"));
-		return;
-	}
-
-	mComboProgram.ResetContent();
-	mComboPreview.ResetContent();
-
-	BSTR longName;
-	while (S_OK == inputIterator->Next(&input))
-	{
-		BMDSwitcherInputId id;
-		int newIndex;
-
-		input->GetInputId(&id);
-		input->GetString(bmdSwitcherInputPropertyIdLongName, &longName);
-		CString longNameCString(longName);
-		SysFreeString(longName);
-
-		newIndex = mComboProgram.AddString(longNameCString);
-		mComboProgram.SetItemData(newIndex, (DWORD_PTR)id);
-
-		newIndex = mComboPreview.AddString(longNameCString);
-		mComboPreview.SetItemData(newIndex, (DWORD_PTR)id);
-
-		input->Release();
-	}
-	inputIterator->Release();
-
-	updateProgramButtonSelection();
-	updatePreviewButtonSelection();
-}
-
-void CSwitcherPanelDlg::updateProgramButtonSelection()
-{
-	BMDSwitcherInputId	programId;
-	mMixEffectBlock->GetInt(bmdSwitcherMixEffectBlockPropertyIdProgramInput, &programId);
-
-	for (int i = 0; i < mComboProgram.GetCount(); i++)
-	{
-		if (mComboProgram.GetItemData(i) == programId)
-		{
-			mComboProgram.SetCurSel(i);
-			break;
-		}
-	}
-}
-
-void CSwitcherPanelDlg::updatePreviewButtonSelection()
-{
-	BMDSwitcherInputId	previewId;
-	mMixEffectBlock->GetInt(bmdSwitcherMixEffectBlockPropertyIdPreviewInput, &previewId);
-
-	for (int i = 0; i < mComboPreview.GetCount(); i++)
-	{
-		if (mComboPreview.GetItemData(i) == previewId)
-		{
-			mComboPreview.SetCurSel(i);
-			break;
-		}
-	}
-}
-
 void CSwitcherPanelDlg::updateSliderPosition()
 {
 	double position;
@@ -1093,13 +1014,135 @@ void CSwitcherPanelDlg::updateFTBFramesText()
 
 LRESULT CSwitcherPanelDlg::OnMixEffectBlockProgramInputChanged(WPARAM wParam, LPARAM lParam)
 {
-	updateProgramButtonSelection();
+	BMDSwitcherInputId	programId;
+	mMixEffectBlock->GetInt(bmdSwitcherMixEffectBlockPropertyIdProgramInput, &programId);
+
+	mButtonProgInput1.SetFont(&standardFont);
+	mButtonProgInput2.SetFont(&standardFont);
+	mButtonProgInput3.SetFont(&standardFont);
+	mButtonProgInput4.SetFont(&standardFont);
+	mButtonProgInput5.SetFont(&standardFont);
+	mButtonProgInput6.SetFont(&standardFont);
+	mButtonProgInputColor.SetFont(&standardFont);
+	mButtonProgInputColor2.SetFont(&standardFont);
+	mButtonProgMediaPlayer.SetFont(&standardFont);
+	mButtonProgMediaPlayer2.SetFont(&standardFont);
+	mButtonProgBlack.SetFont(&standardFont);
+	mButtonProgBars.SetFont(&standardFont);
+
+	for (int i = 0; i <= 17; i++)
+	{
+		if (i == programId)
+		{
+			switch(i)
+			{
+			case INPUT_C1:
+				mButtonProgInput1.SetFont(&enhancedFont);
+				break;
+			case INPUT_C2:
+				mButtonProgInput2.SetFont(&enhancedFont);
+				break;
+			case INPUT_C3:
+				mButtonProgInput3.SetFont(&enhancedFont);
+				break;
+			case INPUT_C4:
+				mButtonProgInput4.SetFont(&enhancedFont);
+				break;
+			case INPUT_C5:
+				mButtonProgInput5.SetFont(&enhancedFont);
+				break;
+			case INPUT_C6:
+				mButtonProgInput6.SetFont(&enhancedFont);
+				break;
+			case INPUT_Black:
+				mButtonProgBlack.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_Bars:
+				mButtonProgBars.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_1:
+				mButtonProgInputColor.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_2:
+				mButtonProgInputColor2.SetFont(&enhancedFont);
+				break;
+			case INPUT_Media_Player_1:
+				mButtonProgMediaPlayer.SetFont(&enhancedFont);
+				break;
+			case INPUT_Media_Player_2:
+				mButtonProgMediaPlayer2.SetFont(&enhancedFont);
+				break;
+			}
+			break;
+		}
+	}
 	return 0;
 }
 
 LRESULT CSwitcherPanelDlg::OnMixEffectBlockPreviewInputChanged(WPARAM wParam, LPARAM lParam)
 {
-	updatePreviewButtonSelection();
+	BMDSwitcherInputId	programId;
+	mMixEffectBlock->GetInt(bmdSwitcherMixEffectBlockPropertyIdPreviewInput, &programId);
+
+	mButtonPrevInput1.SetFont(&standardFont);
+	mButtonPrevInput2.SetFont(&standardFont);
+	mButtonPrevInput3.SetFont(&standardFont);
+	mButtonPrevInput4.SetFont(&standardFont);
+	mButtonPrevInput5.SetFont(&standardFont);
+	mButtonPrevInput6.SetFont(&standardFont);
+	mButtonPrevInputColor.SetFont(&standardFont);
+	mButtonPrevInputColor2.SetFont(&standardFont);
+	mButtonPrevMediaPlayer.SetFont(&standardFont);
+	mButtonPrevMediaPlayer2.SetFont(&standardFont);
+	mButtonPrevBlack.SetFont(&standardFont);
+	mButtonPrevBars.SetFont(&standardFont);
+
+	for (int i = 0; i <= 17; i++)
+	{
+		if (i == programId)
+		{
+			switch(i)
+			{
+			case INPUT_C1:
+				mButtonPrevInput1.SetFont(&enhancedFont);
+				break;
+			case INPUT_C2:
+				mButtonPrevInput2.SetFont(&enhancedFont);
+				break;
+			case INPUT_C3:
+				mButtonPrevInput3.SetFont(&enhancedFont);
+				break;
+			case INPUT_C4:
+				mButtonPrevInput4.SetFont(&enhancedFont);
+				break;
+			case INPUT_C5:
+				mButtonPrevInput5.SetFont(&enhancedFont);
+				break;
+			case INPUT_C6:
+				mButtonPrevInput6.SetFont(&enhancedFont);
+				break;
+			case INPUT_Black:
+				mButtonPrevBlack.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_Bars:
+				mButtonPrevBars.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_1:
+				mButtonPrevInputColor.SetFont(&enhancedFont);
+				break;
+			case INPUT_Color_2:
+				mButtonPrevInputColor2.SetFont(&enhancedFont);
+				break;
+			case INPUT_Media_Player_1:
+				mButtonPrevMediaPlayer.SetFont(&enhancedFont);
+				break;
+			case INPUT_Media_Player_2:
+				mButtonPrevMediaPlayer2.SetFont(&enhancedFont);
+				break;
+			}
+			break;
+		}
+	}
 	return 0;
 }
 
@@ -1143,7 +1186,6 @@ LRESULT CSwitcherPanelDlg::OnMixEffectBlockFTBFramesRemainingChanged(WPARAM wPar
 
 LRESULT CSwitcherPanelDlg::OnSwitcherInputLongnameChanged(WPARAM wParam, LPARAM lParam)
 {
-	updatePopupButtonItems();
 	return 0;
 }
 
@@ -1155,8 +1197,6 @@ LRESULT CSwitcherPanelDlg::OnSwitcherDisconnected(WPARAM wParam, LPARAM lParam)
 
 void CSwitcherPanelDlg::mixEffectBlockBoxSetEnabled(BOOL enabled)
 {
-	mComboProgram.EnableWindow(enabled);
-	mComboPreview.EnableWindow(enabled);
 	mSlider.EnableWindow(enabled);
 	mButtonAuto.EnableWindow(enabled);
 	mButtonCut.EnableWindow(enabled);
