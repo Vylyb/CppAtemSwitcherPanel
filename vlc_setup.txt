@@ -1,0 +1,39 @@
+VLC Setup
+*********
+
+!!! Vorher alle Instanzen vom VLC-Player per Taskmanager/Prozesse beenden (vlc.exe) !!!
+
+# Für alle Player mit Einspielern und Bauchbinden:
+
+	- Neue Instanz starten
+	- Playlist laden
+	- unter Preferences (Ctrl+P) 'Show Settings' auf 'All' setzen
+	- Kategorie 'Input / Codecs' suchen
+	- Unter 'Network Settings' 'Http server port' einstellen (8080 bis 8082 sind in der GUI voreingestellt, lassen sich aber ändern)
+	- -> 'Save'
+	- Unter 'View' bei 'Add Interface' 'Web' auswählen
+	- Im Browser mit 'http://localhost:[port]/requests/playlist.xml' testen ob das HTTP-Interface antwortet und die Playlist sendet
+	- Player auf die entsprechenden Ausgänge legen und Vollbildmodus aktivieren
+
+# Zusätzlich für den Player mit den Bauchbinden:
+
+	- Bauchbinden müssen in der Playlist als PNG-Dateien gespeichert sein
+	- Transparenz ist nicht nötig, Schwarz wird automatisch herausgefiltert
+	- alle Bauchbinden müssen die selbe Auflösung besitzen!!! (in diesem Fall 1920x1080)
+	- Wiedergabemodus auf 'Loop One' einstellen!
+
+	Für ein dauerhaftes Logo:
+	- transparentes PNG mit dem Logo speichern
+	- Auflösung so wählen, dass das Bild gerade die Ausmaße des Logos hat (spart Performance)
+	- unter Preferences (Ctrl+P) 'Show Settings' auf 'All' setzen
+	- Kategorie 'Logo overlay' suchen
+	- Datei laden
+	- 'Logo individual image time in ms' auf 0 setzen
+	- 'Logo animation # of loops' auf -1 setzen
+	- 'Opacity of logo' auf 255 setzen
+	- -> 'Save'
+	- Effektdialog (Ctrl+E) öffnen
+	- Unter 'Video Effects' -> 'Overlay' 'Add logo' aktivieren
+	- Koordinaten des Logos einstellen
+	- 'Transparency' auf 'full' setzen
+	- -> 'Close'

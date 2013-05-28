@@ -30,8 +30,13 @@
 #include "BMDSwitcherAPI_h.h"
 #include <list>
 #include <vector>
+#include <conio.h>
 #include "afxwin.h"
 #include "afxcmn.h"
+
+#include "VlcHttpConnection.h"
+
+#define NUM_INPUTS	6
 
 #define INPUT_Black					0
 #define INPUT_C1					1
@@ -58,6 +63,11 @@
 #define AUDIO_INPUT_4	3
 #define AUDIO_INPUT_5	4
 #define AUDIO_INPUT_6	5
+
+#define NUM_VLC_PLAYERS	3
+#define VLC_1			0
+#define VLC_2			1
+#define VLC_3			2
 
 class MixEffectBlockMonitor;
 class SwitcherMonitor;
@@ -95,6 +105,10 @@ public:
 	afx_msg void OnPreviewInputChanged();
 
 private:
+	CString getValueFromTag(CString tag,CString line);
+	bool transitionStarted;
+	void insertPlaylistItem(CListCtrl *list,int row,int col,CString text);
+	bool changeSelectedVideo(CListCtrl *list,int vlcId);
 	void switcherConnected();
 	void switcherDisconnected();
 	void updateSliderPosition();
@@ -141,6 +155,7 @@ private:
 	BOOL						mCurrentTransitionReachedHalfway;
 	double						sliderRange,minGain,maxGain;
 	CFont						standardFont,enhancedFont;
+	VlcHttpConnection*			vlcHttpConnections[NUM_VLC_PLAYERS];
 
 public:
 	afx_msg void OnBnClickedButtonProgInput9();
@@ -198,7 +213,6 @@ public:
 	CButton mButtonPrevBars;
 private:
 	CSliderCtrl mSliderMasterVolume;
-	void addOutputLine(CString str);
 	void updateMasterGain();
 	void updateMasterBalance();
 	double currentMasterGain;
@@ -207,6 +221,13 @@ private:
 	void muteInput(int inputID);
 	void updateInputGain(int inputID);
 	void updateInputBalance(int inputID);
+	void addOutputLine(CString str);
+	void sendVlcInitRequest(int vlcId);
+	void sendVlcPlaySelectedRequest(int vlcId);
+//	void sendVlcPlayLastRequest(int vlcId);
+//	void sendVlcPlayNextRequest(int vlcId);
+	void sendVlcPauseRequest(int vlcId);
+	void sendVlcResumeRequest(int vlcId);
 public:
 	CEdit mEditOutput;
 	afx_msg void OnBnClickedButtonAudioMute();
@@ -252,4 +273,58 @@ public:
 	afx_msg void OnBnClickedButtonMuteInput4();
 	afx_msg void OnBnClickedButtonMuteInput5();
 	afx_msg void OnBnClickedButtonMuteInput6();
+	CEdit mEditVlcIp1;
+	CEdit mEditVlcPort1;
+	CButton mButtonConnectVlc1;
+	afx_msg void OnBnClickedButtonConnectVlc1();
+	CListCtrl mVlcPlaylist1;
+	CButton mButtonVlcPlaySelected1;
+	CButton mButtonVlcPlayLast;
+	CButton mButtonVlcPause1;
+	CButton mButtonVlcPlayNext1;
+	afx_msg void OnBnClickedVlcPlaySelected1();
+//	afx_msg void OnBnClickedVlcPlayLast1();
+	afx_msg void OnBnClickedVlcPause1();
+//	afx_msg void OnBnClickedVlcPlayNext1();
+	afx_msg void OnLvnItemchangedListVlcPlaylist1(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedRadioVlcStartWithTransition1();
+	afx_msg void OnBnClickedRadioVlcStartAtTransitionEnd1();
+	CButton mVlcStartWithTransition1;
+	CButton mVlcStartAtTransitionEnd1;
+	CButton mButtonVlcResume1;
+	afx_msg void OnBnClickedVlcPlay1();
+	afx_msg void OnBnClickedCheckVlcStartWithTransition1();
+	CEdit mEditVlcInput1;
+	CSpinButtonCtrl mSpinVlcInput1;
+	CButton mCheckVlcStartWithTransition1;
+	CButton mCheckVlcStopWithTransition1;
+	CEdit mEditVlcPort2;
+	CEdit mEditVlcInput2;
+	CButton mButtonVlcPlaySelected2;
+	CButton mButtonVlcResume2;
+	CButton mButtonVlcPause2;
+	CButton mCheckVlcStartWithTransition2;
+	CButton mCheckVlcStopWithTransition2;
+	CListCtrl mVlcPlaylist2;
+	CSpinButtonCtrl mSpinVlcInput2;
+	afx_msg void OnBnClickedButtonConnectVlc2();
+	afx_msg void OnLvnItemchangedListVlcPlaylist2(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedVlcPlaySelected2();
+	afx_msg void OnBnClickedVlcPlay2();
+	afx_msg void OnBnClickedVlcPause2();
+	afx_msg void OnEnChangeEditVlcInput1();
+	afx_msg void OnEnChangeEditVlcInput2();
+	CEdit mStatusBar;
+	void writeStatusLine(char* line);
+	void writeStatusLine(CString line);
+	void setStatusOK(void);
+//	afx_msg void OnTRBNThumbPosChangingSlider(NMHDR *pNMHDR, LRESULT *pResult);
+//	void updateTransitionSliderPosition(void);
+//	afx_msg void OnNMCustomdrawSlider(NMHDR *pNMHDR, LRESULT *pResult);
+	CEdit mEditVlcPort3;
+	CListCtrl mVlcPlaylist3;
+	afx_msg void OnLvnItemchangedListVlcPlaylist3(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedButtonConnectVlc3();
+private:
+	void initVlcConnection(CString port, int vlcId);
 };

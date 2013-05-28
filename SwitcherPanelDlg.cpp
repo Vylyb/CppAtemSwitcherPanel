@@ -443,6 +443,8 @@ private:
 	HWND					mHwnd;
 	LONG					mRefCount;
 	BMDSwitcherAudioInputId	inputID;
+	CString selectedVideoName;
+	int selectedVideoID;
 };
 
 
@@ -525,6 +527,28 @@ void CSwitcherPanelDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_GAIN_INPUT4, mEditGainInput4);
 	DDX_Control(pDX, IDC_EDIT_GAIN_INPUT5, mEditGainInput5);
 	DDX_Control(pDX, IDC_EDIT_GAIN_INPUT6, mEditGainInput6);
+	DDX_Control(pDX, IDC_EDIT_VLC_PORT1, mEditVlcPort1);
+	DDX_Control(pDX, IDC_BUTTON_CONNECT_VLC1, mButtonConnectVlc1);
+	DDX_Control(pDX, IDC_LIST_VLC_PLAYLIST1, mVlcPlaylist1);
+	DDX_Control(pDX, IDC_VLC_PLAY_SELECTED1, mButtonVlcPlaySelected1);
+	DDX_Control(pDX, IDC_VLC_PAUSE1, mButtonVlcPause1);
+	DDX_Control(pDX, IDC_VLC_PLAY1, mButtonVlcResume1);
+	DDX_Control(pDX, IDC_EDIT_VLC_INPUT1, mEditVlcInput1);
+	DDX_Control(pDX, IDC_SPIN_VLC_INPUT1, mSpinVlcInput1);
+	DDX_Control(pDX, IDC_CHECK_VLC_START_WITH_TRANSITION1, mCheckVlcStartWithTransition1);
+	DDX_Control(pDX, IDC_CHECK_VLC_STOP_WITH_TRANSITION1, mCheckVlcStopWithTransition1);
+	DDX_Control(pDX, IDC_EDIT_VLC_PORT2, mEditVlcPort2);
+	DDX_Control(pDX, IDC_EDIT_VLC_INPUT2, mEditVlcInput2);
+	DDX_Control(pDX, IDC_VLC_PLAY_SELECTED2, mButtonVlcPlaySelected2);
+	DDX_Control(pDX, IDC_VLC_PLAY2, mButtonVlcResume2);
+	DDX_Control(pDX, IDC_VLC_PAUSE2, mButtonVlcPause2);
+	DDX_Control(pDX, IDC_CHECK_VLC_START_WITH_TRANSITION2, mCheckVlcStartWithTransition2);
+	DDX_Control(pDX, IDC_CHECK_VLC_STOP_WITH_TRANSITION2, mCheckVlcStopWithTransition2);
+	DDX_Control(pDX, IDC_LIST_VLC_PLAYLIST2, mVlcPlaylist2);
+	DDX_Control(pDX, IDC_SPIN_VLC_INPUT2, mSpinVlcInput2);
+	DDX_Control(pDX, IDC_EDIT_STATUSBAR, mStatusBar);
+	DDX_Control(pDX, IDC_EDIT_VLC_PORT3, mEditVlcPort3);
+	DDX_Control(pDX, IDC_LIST_VLC_PLAYLIST3, mVlcPlaylist3);
 }
 
 BEGIN_MESSAGE_MAP(CSwitcherPanelDlg, CDialog)
@@ -583,6 +607,20 @@ BEGIN_MESSAGE_MAP(CSwitcherPanelDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_MUTE_INPUT4, &CSwitcherPanelDlg::OnBnClickedButtonMuteInput4)
 	ON_BN_CLICKED(IDC_BUTTON_MUTE_INPUT5, &CSwitcherPanelDlg::OnBnClickedButtonMuteInput5)
 	ON_BN_CLICKED(IDC_BUTTON_MUTE_INPUT6, &CSwitcherPanelDlg::OnBnClickedButtonMuteInput6)
+	ON_BN_CLICKED(IDC_BUTTON_CONNECT_VLC1, &CSwitcherPanelDlg::OnBnClickedButtonConnectVlc1)
+	ON_BN_CLICKED(IDC_VLC_PLAY_SELECTED1, &CSwitcherPanelDlg::OnBnClickedVlcPlaySelected1)
+	ON_BN_CLICKED(IDC_VLC_PAUSE1, &CSwitcherPanelDlg::OnBnClickedVlcPause1)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_VLC_PLAYLIST1, &CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist1)
+	ON_BN_CLICKED(IDC_VLC_PLAY1, &CSwitcherPanelDlg::OnBnClickedVlcPlay1)
+	ON_BN_CLICKED(IDC_BUTTON_CONNECT_VLC2, &CSwitcherPanelDlg::OnBnClickedButtonConnectVlc2)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_VLC_PLAYLIST2, &CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist2)
+	ON_BN_CLICKED(IDC_VLC_PLAY_SELECTED2, &CSwitcherPanelDlg::OnBnClickedVlcPlaySelected2)
+	ON_BN_CLICKED(IDC_VLC_PLAY2, &CSwitcherPanelDlg::OnBnClickedVlcPlay2)
+	ON_BN_CLICKED(IDC_VLC_PAUSE2, &CSwitcherPanelDlg::OnBnClickedVlcPause2)
+	ON_EN_CHANGE(IDC_EDIT_VLC_INPUT1, &CSwitcherPanelDlg::OnEnChangeEditVlcInput1)
+	ON_EN_CHANGE(IDC_EDIT_VLC_INPUT2, &CSwitcherPanelDlg::OnEnChangeEditVlcInput2)
+	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_VLC_PLAYLIST3, &CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist3)
+	ON_BN_CLICKED(IDC_BUTTON_CONNECT_VLC3, &CSwitcherPanelDlg::OnBnClickedButtonConnectVlc3)
 END_MESSAGE_MAP()
 
 
@@ -603,6 +641,9 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 		MessageBox(_T("CoInitialize failed."), _T("Error"));
 		goto bail;
 	}
+
+	if (!AllocConsole())
+		MessageBox(_T("Failed to create the console!"), _T("Error"));
 
 	standardFont.CreatePointFont(100, _T("Arial"));
 	enhancedFont.CreatePointFont(160, _T("Arial Black"));
@@ -651,7 +692,35 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 		currentGainInputs.push_back(0.0);
 	}
 
+	mEditAddress.SetWindowText(_T("192.168.1.123"));
+
+	mEditVlcPort1.SetWindowText(_T("8080"));
+
+	mVlcPlaylist1.InsertColumn(0, CString("Name"), LVCFMT_LEFT, 220, -1);
+    mVlcPlaylist1.InsertColumn(1, CString("ID"), LVCFMT_RIGHT, 30, -1);
+
+	mSpinVlcInput1.SetBuddy(&mEditVlcInput1);
+	mSpinVlcInput1.SetRange(1,NUM_INPUTS);
+	mSpinVlcInput1.SetPos(1);
+
+	mEditVlcPort2.SetWindowText(_T("8081"));
+
+	mVlcPlaylist2.InsertColumn(0, CString("Name"), LVCFMT_LEFT, 220, -1);
+    mVlcPlaylist2.InsertColumn(1, CString("ID"), LVCFMT_RIGHT, 30, -1);
+
+	mSpinVlcInput2.SetBuddy(&mEditVlcInput2);
+	mSpinVlcInput2.SetRange(1,NUM_INPUTS);
+
+	mSpinVlcInput2.SetPos(1);
+
+	mEditVlcPort3.SetWindowText(_T("8082"));
+
+	mVlcPlaylist3.InsertColumn(0, CString("Name"), LVCFMT_LEFT, 220, -1);
+    mVlcPlaylist3.InsertColumn(1, CString("ID"), LVCFMT_RIGHT, 30, -1);
+
 	switcherDisconnected();		// start with switcher disconnected
+
+	_cprintf("Initialized the application\n");
 
 	return TRUE;				// return TRUE unless you set the focus to a control
 
@@ -716,6 +785,7 @@ void CSwitcherPanelDlg::addOutputLine(CString line)
 	mEditOutput.SetWindowText(str);
 	int nLength = mEditOutput.GetWindowTextLength();
 	mEditOutput.SetSel(nLength, nLength);
+//	_cprintf("%s\n",line);
 }
 
 void CSwitcherPanelDlg::setProgramInput(BMDSwitcherInputId id)
@@ -950,8 +1020,6 @@ void CSwitcherPanelDlg::switcherDisconnected()
 {
 	mButtonConnect.EnableWindow(TRUE);		// enable connect button so user can re-connect
 	mEditName.SetWindowText(_T(""));
-
-	mEditAddress.SetWindowText(_T("192.168.1.123"));
 
 	mixEffectBlockBoxSetEnabled(FALSE);
 
@@ -1639,3 +1707,336 @@ void CSwitcherPanelDlg::OnBnClickedButtonMuteInput6()
 {
 	muteInput(AUDIO_INPUT_6);
 }
+
+// vlc http interface
+
+void CSwitcherPanelDlg::OnBnClickedButtonConnectVlc1()
+{
+	CString portString;
+	mEditVlcPort1.GetWindowText(portString);
+	initVlcConnection(portString,VLC_1);
+}
+
+void CSwitcherPanelDlg::OnBnClickedButtonConnectVlc2()
+{
+	CString portString;
+	mEditVlcPort2.GetWindowText(portString);
+	initVlcConnection(portString,VLC_2);
+}
+
+void CSwitcherPanelDlg::OnBnClickedButtonConnectVlc3()
+{
+	CString portString;
+	mEditVlcPort3.GetWindowText(portString);
+	initVlcConnection(portString,VLC_3);
+}
+
+void CSwitcherPanelDlg::initVlcConnection(CString port, int vlcId)
+{
+	CString ipString=CString("127.0.0.1");
+	
+	VlcHttpConnection *http = new VlcHttpConnection(ipString, port);
+	if(http->wasSuccessful())
+	{
+		CString line;
+		line.Format(_T("Connected to VLC #%d at %s:%s"),vlcId,ipString,port);
+		addOutputLine(line);
+		vlcHttpConnections[vlcId]=http;
+
+		sendVlcInitRequest(vlcId);
+	}
+	else
+	{
+		CString line;
+		line.Format(_T("Could not connect to VLC. Error: %d"),http->getHttpError());
+		addOutputLine(line);
+	}
+}
+
+void CSwitcherPanelDlg::insertPlaylistItem(CListCtrl *list,int row,int col, CString text)
+{
+
+	LVITEM lv;
+	lv.iItem = row;
+	lv.iSubItem = col;
+	lv.pszText = CT2W(text);
+	lv.mask = LVIF_TEXT;
+
+	if(col == 0)
+		list->InsertItem(&lv);
+	else
+		list->SetItem(&lv);  
+}
+
+void CSwitcherPanelDlg::sendVlcInitRequest(int vlcId)
+{
+	if(vlcId < 0 || vlcId >= NUM_VLC_PLAYERS)
+		return;
+
+	CString playlist = vlcHttpConnections[vlcId]->getPlaylist();
+
+	CStringArray entries;
+	CString entry;
+	
+	int i;
+	char c;
+	for(i=0;i<playlist.GetLength();i++)
+	{
+		c = (char)playlist.GetAt(i);
+
+		if(c == '<')
+		{
+			entry = "";
+		}
+		else if(c == '>')
+		{
+			entries.Add(entry);
+		}
+		else
+		{
+			entry += c;
+		}
+	}
+	
+	CListCtrl *list=NULL;
+	switch(vlcId)
+	{
+	case VLC_1:
+		list=&mVlcPlaylist1;
+		break;
+	case VLC_2:
+		list=&mVlcPlaylist2;
+		break;
+	case VLC_3:
+		list=&mVlcPlaylist3;
+		break;
+	}
+
+	if(list!=NULL)
+	{
+		list->DeleteAllItems();
+
+		int item=0;
+		for(i=0;i<entries.GetSize();i++)
+		{
+			CString str=entries.GetAt(i);
+			if(str.Find(_T("leaf "))==0)
+			{
+				CString name=getValueFromTag(_T("name"),str);
+				if(name.GetLength()>0)
+				{
+					CString id=getValueFromTag(_T("id"),str);
+					if(id.GetLength()>0)
+					{
+						bool insert=true;
+
+						for(int r=0;r<list->GetItemCount();r++)
+						{
+							if(id.Compare(list->GetItemText(r,1))==0)
+							{
+								insert=false;
+								r=list->GetItemCount();
+							}
+						}
+
+						if(insert)
+						{
+							insertPlaylistItem(list,item,0,name);
+							insertPlaylistItem(list,item,1,id);
+							item++;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void CSwitcherPanelDlg::sendVlcPlaySelectedRequest(int vlcId)
+{
+	if(vlcId < 0 || vlcId >= NUM_VLC_PLAYERS)
+		return;
+
+	vlcHttpConnections[vlcId]->playSelected();
+}
+
+void CSwitcherPanelDlg::sendVlcPauseRequest(int vlcId)
+{
+	if(vlcId < 0 || vlcId >= NUM_VLC_PLAYERS)
+		return;
+
+	vlcHttpConnections[vlcId]->pause();
+}
+
+void CSwitcherPanelDlg::sendVlcResumeRequest(int vlcId)
+{
+	if(vlcId < 0 || vlcId >= NUM_VLC_PLAYERS)
+		return;
+
+	vlcHttpConnections[vlcId]->resume();
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPlaySelected1()
+{
+	sendVlcPlaySelectedRequest(VLC_1);
+	mButtonVlcPause1.EnableWindow(true);
+	mButtonVlcResume1.EnableWindow(true);
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPlaySelected2()
+{
+	sendVlcPlaySelectedRequest(VLC_2);
+	mButtonVlcPause2.EnableWindow(true);
+	mButtonVlcResume2.EnableWindow(true);
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPause1()
+{
+	sendVlcPauseRequest(VLC_1);
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPause2()
+{
+	sendVlcPauseRequest(VLC_2);
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPlay1()
+{
+	sendVlcResumeRequest(VLC_1);
+}
+
+void CSwitcherPanelDlg::OnBnClickedVlcPlay2()
+{
+	sendVlcResumeRequest(VLC_2);
+}
+
+CString CSwitcherPanelDlg::getValueFromTag(CString tag,CString line)
+{
+	CString value;
+
+	tag += "=\"";
+	int index=line.Find(tag);
+	if(index<0)
+		return CString("");
+
+	value="";
+	char c;
+	bool replaceUmlaut=false;
+	for(int i=index+tag.GetLength();i<line.GetLength() && (c=line.GetAt(i))!='\"';i++)
+	{
+		if(replaceUmlaut)
+		{
+			replaceUmlaut=false;
+			if(c == '¤')
+				value += "ä";
+			else if(c == '¶')
+				value += "ö";
+			else if(c == '¼')
+				value += "ü";
+		}
+		else
+		{
+			if(c=='Ã')
+				replaceUmlaut=true;
+			else
+				value += c;
+		}
+	}
+
+	return value;
+}
+
+bool CSwitcherPanelDlg::changeSelectedVideo(CListCtrl *list,int vlcId)
+{
+	POSITION pos = list->GetFirstSelectedItemPosition();
+	int selected=-1;
+	if (pos != NULL)
+	{
+		while (pos)
+		{
+			selected = list->GetNextSelectedItem(pos);
+		}
+	}
+	if(selected>=0 && selected<list->GetItemCount())
+	{
+		vlcHttpConnections[vlcId]->setSelectedVideoName(list->GetItemText(selected,0));
+		vlcHttpConnections[vlcId]->setSelectedVideoID(list->GetItemText(selected,1));
+		return true;
+	}
+	return false;
+}
+
+void CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist1(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+	if ((pNMListView->uChanged & LVIF_STATE) && (pNMListView->uNewState & LVNI_SELECTED))
+    {
+		mButtonVlcPlaySelected1.EnableWindow(changeSelectedVideo(&mVlcPlaylist1,VLC_1));
+    }
+}
+
+
+void CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist2(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+	if ((pNMListView->uChanged & LVIF_STATE) && (pNMListView->uNewState & LVNI_SELECTED))
+    {
+		mButtonVlcPlaySelected2.EnableWindow(changeSelectedVideo(&mVlcPlaylist2,VLC_2));
+    }
+}
+
+void CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist3(NMHDR *pNMHDR, LRESULT *pResult)
+{
+    NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
+	if ((pNMListView->uChanged & LVIF_STATE) && (pNMListView->uNewState & LVNI_SELECTED))
+    {
+		changeSelectedVideo(&mVlcPlaylist3,VLC_3);
+		sendVlcPlaySelectedRequest(VLC_3);
+		sendVlcPauseRequest(VLC_3);
+    }
+}
+
+void CSwitcherPanelDlg::OnEnChangeEditVlcInput1()
+{
+	CString thisinput,otherinput;
+	mEditVlcInput1.GetWindowText(thisinput);
+	mEditVlcInput2.GetWindowText(otherinput);
+
+	if(thisinput.Compare(otherinput)==0)
+	{
+		writeStatusLine("Both VLC Players are on the same input. Auto Play with Transitions won't work!");
+	}
+	else
+		setStatusOK();
+}
+
+
+void CSwitcherPanelDlg::OnEnChangeEditVlcInput2()
+{
+	CString thisinput,otherinput;
+	mEditVlcInput2.GetWindowText(thisinput);
+	mEditVlcInput1.GetWindowText(otherinput);
+
+	if(thisinput.Compare(otherinput)==0)
+	{
+		writeStatusLine("Both VLC Players are on the same input. Auto Play with Transitions won't work!");
+	}
+	else
+		setStatusOK();
+}
+
+void CSwitcherPanelDlg::writeStatusLine(char* line)
+{
+	writeStatusLine(CString(line));
+}
+
+void CSwitcherPanelDlg::writeStatusLine(CString line)
+{
+	mStatusBar.SetWindowTextW(line);
+}
+
+void CSwitcherPanelDlg::setStatusOK(void)
+{
+	writeStatusLine("Everything OK");
+}
+
