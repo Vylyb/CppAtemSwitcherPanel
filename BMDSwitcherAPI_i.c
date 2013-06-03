@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0595 */
-/* at Tue May 07 22:37:51 2013
+/* at Sun Jun 02 22:42:07 2013
  */
 /* Compiler settings for ..\..\include\BMDSwitcherAPI.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0595 

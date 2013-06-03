@@ -69,6 +69,8 @@
 #define VLC_2			1
 #define VLC_3			2
 
+#define BUFFER_LENGTH 1024
+
 class MixEffectBlockMonitor;
 class SwitcherMonitor;
 class InputMonitor;
@@ -94,6 +96,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+	afx_msg void OnClose();
 	DECLARE_MESSAGE_MAP()
 
 public:
@@ -224,8 +227,6 @@ private:
 	void addOutputLine(CString str);
 	void sendVlcInitRequest(int vlcId);
 	void sendVlcPlaySelectedRequest(int vlcId);
-//	void sendVlcPlayLastRequest(int vlcId);
-//	void sendVlcPlayNextRequest(int vlcId);
 	void sendVlcPauseRequest(int vlcId);
 	void sendVlcResumeRequest(int vlcId);
 public:
@@ -327,4 +328,38 @@ public:
 	afx_msg void OnBnClickedButtonConnectVlc3();
 private:
 	void initVlcConnection(CString port, int vlcId);
+	void moveTestSlider(int value);
+	char*	charsfromCString(CString str);
+public:
+	CSliderCtrl mTestSlider;
+private:
+	/*
+		UDP GUI Server
+	*/
+	WSADATA			wsa;
+	SOCKET			acceptSocket;
+	SOCKADDR_IN		addr;
+	char			reuseAddress;
+	int				port;
+//	int				client_fd;
+	struct sockaddr_storage		incming_info;
+	int				initGuiServer(int port);
+	void			cleanUpGuiServer(void);
+	static void		static_receiveGuiUdpMessages(void * args);
+	void			receiveGuiUdpMessages(void);
+	void handleGuiElementMessage(char* command);
+	void changeGuiElement(CString element);
+	void changeGuiElement(CString element, int value);
+	void changeGuiElement(CString element, CString value);
+	void changeGuiElement(CString element, bool value);
+public:
+	CEdit mEditGuiServer;
+private:
+	void printGuiServerLine(CString line);
+	void printGuiServerLine(char* line);
+	bool mBoolEnableSwitcherMixBlock;
+	CButton mButtonConnectVlc2;
+	CButton mButtonConnectVlc3;
+	bool mBoolVlc1Enabled;
+	bool mBoolVlc2Enabled;
 };
