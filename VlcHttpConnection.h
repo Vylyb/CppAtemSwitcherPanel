@@ -4,6 +4,8 @@
 #include <WinSock2.h>
 #include <conio.h>
 
+#include "StringHandler.h"
+
 #define HTTP_NO_ERROR					0
 #define	HTTP_ERROR_WSASTARTUP_FAILED	1
 #define	HTTP_ERROR_CREATE_SOCKET_FAILED	2
@@ -178,10 +180,6 @@ private:
 	bool	initServer(char* ip, int port);
 	bool	success;
 	int		httpError;
-	int		intfromCString(CString str);
-	char*	ipfromCString(CString str);
-	char*	charsfromCString(CString str);
-	void	charBufferFromCString(CString str);
 	int		Socket;
 	CString	selectedVideoID;
 	CString	selectedVideoName;

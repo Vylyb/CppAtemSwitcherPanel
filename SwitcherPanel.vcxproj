@@ -111,6 +111,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GuiClient.cpp" />
+    <ClCompile Include="StringHandler.cpp" />
     <ClCompile Include="VlcHttpConnection.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -124,6 +126,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GuiClient.h" />
+    <ClInclude Include="StringHandler.h" />
     <ClInclude Include="VlcHttpConnection.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />

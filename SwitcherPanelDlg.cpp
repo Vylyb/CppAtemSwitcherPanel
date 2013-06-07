@@ -556,13 +556,18 @@ void CSwitcherPanelDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_GUI_SERVER, mEditGuiServer);
 	DDX_Control(pDX, IDC_BUTTON_CONNECT_VLC2, mButtonConnectVlc2);
 	DDX_Control(pDX, IDC_BUTTON_CONNECT_VLC3, mButtonConnectVlc3);
+	DDX_Control(pDX, IDC_EDIT_GUI_CLIENT_IP, mEditGuiClientIp);
+	DDX_Control(pDX, IDC_EDIT_GUI_CLIENT_PORT, mEditGuiClientPort);
+	DDX_Control(pDX, IDC_EDIT_GUI_SERVER_IP, mEditGuiServerIp);
+	DDX_Control(pDX, IDC_EDIT_GUI_SERVER_PORT, mEditGuiServerPort);
+	DDX_Control(pDX, IDC_EDIT_NAME2, mEditGuiClient);
 }
 
 BEGIN_MESSAGE_MAP(CSwitcherPanelDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_WM_VSCROLL()				// The slider's VSCROLL messages are handled in OnVScroll
+	ON_WM_VSCROLL()
 	ON_WM_HSCROLL()
 	ON_WM_CLOSE()
 	//}}AFX_MSG_MAP
@@ -631,6 +636,11 @@ BEGIN_MESSAGE_MAP(CSwitcherPanelDlg, CDialog)
 	ON_EN_CHANGE(IDC_EDIT_VLC_INPUT2, &CSwitcherPanelDlg::OnEnChangeEditVlcInput2)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_VLC_PLAYLIST3, &CSwitcherPanelDlg::OnLvnItemchangedListVlcPlaylist3)
 	ON_BN_CLICKED(IDC_BUTTON_CONNECT_VLC3, &CSwitcherPanelDlg::OnBnClickedButtonConnectVlc3)
+	ON_BN_CLICKED(IDC_BUTTON_GUI_CLIENT_CONNECT, &CSwitcherPanelDlg::OnBnClickedButtonGuiClientConnect)
+	ON_BN_CLICKED(IDC_BUTTON_GUI_SERVER_CONNECT, &CSwitcherPanelDlg::OnBnClickedButtonGuiServerConnect)
+	ON_EN_CHANGE(IDC_EDIT_VLC_PORT1, &CSwitcherPanelDlg::OnEnChangeEditVlcPort1)
+	ON_EN_CHANGE(IDC_EDIT_VLC_PORT2, &CSwitcherPanelDlg::OnEnChangeEditVlcPort2)
+	ON_EN_CHANGE(IDC_EDIT_VLC_PORT3, &CSwitcherPanelDlg::OnEnChangeEditVlcPort3)
 END_MESSAGE_MAP()
 
 
@@ -707,7 +717,11 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 	}
 
 	mEditAddress.SetWindowText(_T("192.168.1.123"));
+//	mEditAddress.SetWindowText(_T("141.64."));
 
+	/*
+		VLC
+	*/
 	mEditVlcPort1.SetWindowText(_T("8080"));
 
 	mVlcPlaylist1.InsertColumn(0, CString("Name"), LVCFMT_LEFT, 220, -1);
@@ -734,22 +748,20 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 
 	switcherDisconnected();		// start with switcher disconnected
 
-	printGuiServerLine("Socket Closed");
+	/*
+		GUI SERVER
+	*/
+	mEditGuiServerPort.SetWindowTextW(_T("8000"));
+	mEditGuiServerIp.SetWindowTextW(getGuiServerIp());
+	printGuiServerLine("Server Offline");
 
-	int success;
-	CString line=CString("");
-	if((success = initGuiServer(8000)) == 0)
-	{
-		_beginthread(static_receiveGuiUdpMessages, 0, this);
-		_cprintf("Server Port: %d\n\n",port);
-		line.Format(_T("Port: %d"),port);
-	}
-	else
-	{
-		_cprintf("Server Error: %d\n\n",success);
-		line.Format(_T("Error: %d"),success);
-	}
-	printGuiServerLine(line);
+	/*
+		GUI CLIENT
+	*/
+	guiClient = GuiClient();
+	mEditGuiClientPort.SetWindowTextW(_T("9000"));
+	mEditGuiClientIp.SetWindowTextW(_T("192.168.56.1"));
+	printGuiClientLine("Client Offline");
 
 	return TRUE;				// return TRUE unless you set the focus to a control
 }
@@ -840,11 +852,8 @@ void CSwitcherPanelDlg::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBa
 
 	if (pScrollBar == (CScrollBar *) &mSliderMasterVolume)
 	{
-		position = maxGain - position*minGain;
-		CString line;
-		line.Format(_T("%.2fdB"),position);
-		mEditMasterVolume.SetWindowTextW(line);
-		mAudioMixer->SetProgramOutGain(position);
+		handleMasterSliderMovement(nPos);
+		sendGuiIntegerCommand(nPos,"audio_master_volume");
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderGainInput1)
 	{
@@ -906,16 +915,15 @@ void CSwitcherPanelDlg::setInputGainSliderPosition(int inputID,double gain)
 void CSwitcherPanelDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	// Handle only the Slider events
-	if (nSBCode != SB_THUMBTRACK && nSBCode != SB_THUMBPOSITION)
+	if (nSBCode != SB_THUMBTRACK)// && nSBCode != SB_THUMBPOSITION)
 		return;
 
 	double position = nPos / sliderRange;			// convert to [0 .. 1] range
 
 	if (pScrollBar == (CScrollBar *) &mSlider)
 	{
-		if (mMoveSliderDownwards)
-			position = (sliderRange - nPos) / sliderRange;	// deal with flipped slider handle position
-		mMixEffectBlock->SetFloat(bmdSwitcherMixEffectBlockPropertyIdTransitionPosition, position);
+		handleTransitionSliderMovement(nPos);
+//		sendGuiIntegerCommand(nPos,"transition_control_slider");
 	}
 	else if (pScrollBar == (CScrollBar *) &mSliderMasterBalance)
 	{
@@ -1094,6 +1102,8 @@ void CSwitcherPanelDlg::updateSliderPosition()
 
 	int positionRoundedToInt = (int)(sliderPosition + 0.5);
 	mSlider.SetPos(positionRoundedToInt);
+
+	sendGuiIntegerCommand(positionRoundedToInt,"transition_control_slider");
 }
 
 void CSwitcherPanelDlg::updateTransitionFramesText()
@@ -1173,6 +1183,9 @@ LRESULT CSwitcherPanelDlg::OnMixEffectBlockProgramInputChanged(WPARAM wParam, LP
 				mButtonProgMediaPlayer2.SetFont(&enhancedFont);
 				break;
 			}
+
+			sendGuiSwitcherInputChanged(i,"prog_");
+
 			break;
 		}
 	}
@@ -1240,6 +1253,9 @@ LRESULT CSwitcherPanelDlg::OnMixEffectBlockPreviewInputChanged(WPARAM wParam, LP
 				mButtonPrevMediaPlayer2.SetFont(&enhancedFont);
 				break;
 			}
+
+			sendGuiSwitcherInputChanged(i,"prev_");
+
 			break;
 		}
 	}
@@ -1330,28 +1346,28 @@ void CSwitcherPanelDlg::mixEffectBlockBoxSetEnabled(BOOL enabled)
 	mButtonPrevBars.EnableWindow(enabled);
 
 	mSliderMasterVolume.EnableWindow(enabled);
-	mSliderMasterBalance.EnableWindow(enabled);
+//	mSliderMasterBalance.EnableWindow(enabled);
 	mEditMasterBalance.EnableWindow(enabled);
 	mEditMasterVolume.EnableWindow(enabled);
 	mButtonMasterMute.EnableWindow(enabled);
 
 	mSliderGainInput1.EnableWindow(enabled);
-	mSliderBalanceInput1.EnableWindow(enabled);
+//	mSliderBalanceInput1.EnableWindow(enabled);
 	mButtonMuteInput1.EnableWindow(enabled);
 	mSliderGainInput2.EnableWindow(enabled);
-	mSliderBalanceInput2.EnableWindow(enabled);
+//	mSliderBalanceInput2.EnableWindow(enabled);
 	mButtonMuteInput2.EnableWindow(enabled);
 	mSliderGainInput3.EnableWindow(enabled);
-	mSliderBalanceInput3.EnableWindow(enabled);
+//	mSliderBalanceInput3.EnableWindow(enabled);
 	mButtonMuteInput3.EnableWindow(enabled);
 	mSliderGainInput4.EnableWindow(enabled);
-	mSliderBalanceInput4.EnableWindow(enabled);
+//	mSliderBalanceInput4.EnableWindow(enabled);
 	mButtonMuteInput4.EnableWindow(enabled);
 	mSliderGainInput5.EnableWindow(enabled);
-	mSliderBalanceInput5.EnableWindow(enabled);
+//	mSliderBalanceInput5.EnableWindow(enabled);
 	mButtonMuteInput5.EnableWindow(enabled);
 	mSliderGainInput6.EnableWindow(enabled);
-	mSliderBalanceInput6.EnableWindow(enabled);
+//	mSliderBalanceInput6.EnableWindow(enabled);
 	mButtonMuteInput6.EnableWindow(enabled);
 }
 
@@ -1528,13 +1544,13 @@ void CSwitcherPanelDlg::OnBnClickedButtonAudioMute()
 	if(gain < -60)
 	{
 		mAudioMixer->SetProgramOutGain(currentMasterGain);
-
 	}
 	else
 	{
 		currentMasterGain=gain;
 		mAudioMixer->SetProgramOutGain(-100);
 	}
+	sendGuiButtonClick("audio_master_mute");
 }
 
 LRESULT CSwitcherPanelDlg::OnAudioMixerMasterGainChanged(WPARAM wParam, LPARAM lParam)
@@ -1561,6 +1577,7 @@ void CSwitcherPanelDlg::updateMasterGain()
 	{
 		line="mute";
 		position=-60;
+		sendGuiButtonClick("audio_master_mute");
 	}
 	else
 	{
@@ -1570,6 +1587,7 @@ void CSwitcherPanelDlg::updateMasterGain()
 
 	position = (position - 6.0) / (-66.0);
 	mSliderMasterVolume.SetPos(sliderRange*position);
+	sendGuiIntegerCommand(sliderRange*position,"audio_master_volume");
 }
 
 void CSwitcherPanelDlg::updateMasterBalance()
@@ -1602,31 +1620,38 @@ void CSwitcherPanelDlg::updateInputGain(int inputID)
 	}
 
 	position = (position - 6.0) / (-66.0);
+	int val = sliderRange*position;
 	switch(inputID)
 	{
 	case AUDIO_INPUT_1:
 		mEditGainInput1.SetWindowTextW(line);
-		mSliderGainInput1.SetPos(sliderRange*position);
+		mSliderGainInput1.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_1_volume");
 		break;
 	case AUDIO_INPUT_2:
 		mEditGainInput2.SetWindowTextW(line);
-		mSliderGainInput2.SetPos(sliderRange*position);
+		mSliderGainInput2.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_2_volume");
 		break;
 	case AUDIO_INPUT_3:
 		mEditGainInput3.SetWindowTextW(line);
-		mSliderGainInput3.SetPos(sliderRange*position);
+		mSliderGainInput3.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_3_volume");
 		break;
 	case AUDIO_INPUT_4:
 		mEditGainInput4.SetWindowTextW(line);
-		mSliderGainInput4.SetPos(sliderRange*position);
+		mSliderGainInput4.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_4_volume");
 		break;
 	case AUDIO_INPUT_5:
 		mEditGainInput5.SetWindowTextW(line);
-		mSliderGainInput5.SetPos(sliderRange*position);
+		mSliderGainInput5.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_5_volume");
 		break;
 	case AUDIO_INPUT_6:
 		mEditGainInput6.SetWindowTextW(line);
-		mSliderGainInput6.SetPos(sliderRange*position);
+		mSliderGainInput6.SetPos(val);
+		sendGuiIntegerCommand(val,"audio_input_6_volume");
 		break;
 	}
 }
@@ -1705,6 +1730,9 @@ void CSwitcherPanelDlg::muteInput(int inputID)
 		currentGainInputs.at(inputID)=gain;
 		mAudioInputMonitors.at(inputID)->input()->SetGain(-100);
 	}
+	CString s;
+	s.Format(_T("%d"),inputID+1);
+	sendGuiButtonClick(CString("audio_input_")+s+CString("_mute"));
 }
 
 void CSwitcherPanelDlg::OnBnClickedButtonMuteInput1()
@@ -1800,6 +1828,8 @@ void CSwitcherPanelDlg::insertPlaylistItem(CListCtrl *list,int row,int col, CStr
 		list->InsertItem(&lv);
 	else
 		list->SetItem(&lv);  
+
+
 }
 
 void CSwitcherPanelDlg::sendVlcInitRequest(int vlcId)
@@ -1997,6 +2027,12 @@ bool CSwitcherPanelDlg::changeSelectedVideo(CListCtrl *list,int vlcId)
 	{
 		vlcHttpConnections[vlcId]->setSelectedVideoName(list->GetItemText(selected,0));
 		vlcHttpConnections[vlcId]->setSelectedVideoID(list->GetItemText(selected,1));
+		if(list==&mVlcPlaylist1)
+			sendGuiIntegerCommand(selected,"vlc_1_list_select");
+		else if(list==&mVlcPlaylist2)
+			sendGuiIntegerCommand(selected,"vlc_2_list_select");
+		else if(list==&mVlcPlaylist3)
+			sendGuiIntegerCommand(selected,"vlc_3_list_select");
 		return true;
 	}
 	return false;
@@ -2076,21 +2112,6 @@ void CSwitcherPanelDlg::setStatusOK(void)
 	writeStatusLine("");
 }
 
-char* CSwitcherPanelDlg::charsfromCString(CString str)
-{
-	LPWSTR cstr = str.GetBuffer(str.GetLength());
-	char* l = (char*)malloc(str.GetLength()+1);
-	int n=0;
-
-	for(int i=0; i<str.GetLength(); i++)
-	{
-		l[n++] = cstr[i];
-	}
-	l[n] = 0;
-
-	return l;
-}
-
 /*
 	UDP GUI Server
 */
@@ -2130,7 +2151,7 @@ int CSwitcherPanelDlg::initGuiServer(int port)
 		return rc;
 	}
 
-	this->port=port;
+	this->guiServerPort=port;
 	
 	return 0;
 }
@@ -2166,16 +2187,6 @@ void CSwitcherPanelDlg::receiveGuiUdpMessages(void)
 	{
 		if((len = recvfrom(acceptSocket,buffer,BUFFER_LENGTH,0,(struct sockaddr *)&client_address,&client_length)) >= 0)
 		{
-			//sscanf(buffer,"%d",&value);
-			//_cprintf("Moved Slider to %d\n",value);
-			//moveTestSlider(value);
-
-			//buffer[0]='a';
-			//buffer[1]='c';
-			//buffer[2]='k';
-			//buffer[3]=0;
-			//sendto(acceptSocket,buffer,BUFFER_LENGTH,0,(struct sockaddr *)&client_address,client_length);
-
 			handleGuiElementMessage(buffer);
 			for(int i=0;i<BUFFER_LENGTH;i++)
 			{
@@ -2200,15 +2211,15 @@ void CSwitcherPanelDlg::handleGuiElementMessage(char* command)
 	bool bValue;
 	char z;
 
-	_cprintf("\nCommand: '%s'\n", charsfromCString(guiCommand));
+	_cprintf("\nCommand: '%s'\n", CStringHandler::charsfromCString(guiCommand));
 
 	if((seperate = guiCommand.Find(_T("#"))) > 0)
 	{
 		elementName=guiCommand.Left(seperate);
-		_cprintf("Element: '%s'\n", charsfromCString(elementName));
+		_cprintf("Element: '%s'\n", CStringHandler::charsfromCString(elementName));
 		
 		elementArg=guiCommand.Right(guiCommand.GetLength() - seperate - 1);
-		_cprintf("Argument: '%s'\n", charsfromCString(elementArg));
+		_cprintf("Argument: '%s'\n", CStringHandler::charsfromCString(elementArg));
 
 		// argument types
 		if(elementArg.GetLength()>0)
@@ -2237,7 +2248,7 @@ void CSwitcherPanelDlg::handleGuiElementMessage(char* command)
 			else if(elementArg[0] == '+') // string value
 			{
 				elementArg = elementArg.Right(elementArg.GetLength() - 1);
-				_cprintf("Argument Type: String\tValue: '%s'\n",charsfromCString(elementArg));
+				_cprintf("Argument Type: String\tValue: '%s'\n",CStringHandler::charsfromCString(elementArg));
 				changeGuiElement(elementName,elementArg);
 			}
 			else
@@ -2413,7 +2424,7 @@ void CSwitcherPanelDlg::changeGuiElement(CString element)
 		/*
 			Transition Buttons
 		*/
-		else if(element.Compare(CString("fade2black")) == 0)
+		else if(element.Compare(CString("transition_ftb")) == 0)
 		{
 			PostMessage(WM_COMMAND, MAKEWPARAM(IDC_BUTTON_FTB, BN_CLICKED), (LPARAM) mButtonFTB.m_hWnd);
 			return;
@@ -2515,10 +2526,86 @@ void CSwitcherPanelDlg::changeGuiElement(CString element)
 
 void CSwitcherPanelDlg::changeGuiElement(CString element, int value)
 {
+	/*
+		Slider in the Switcher Mix Block
+	*/
+	if(mBoolEnableSwitcherMixBlock)
+	{
+		/*
+			Transition Slider
+		*/
+		if(element.Compare(CString("transition_control_slider")) == 0)
+		{
+			mSlider.SetPos(value);
+			handleTransitionSliderMovement(value);
+			return;
+		}
+		else if(element.Compare(CString("audio_master_volume")) == 0)
+		{
+			mSliderMasterVolume.SetPos(value);
+			handleMasterSliderMovement(value);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_1_volume")) == 0)
+		{
+			mSliderGainInput1.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_2_volume")) == 0)
+		{
+			mSliderGainInput2.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_3_volume")) == 0)
+		{
+			mSliderGainInput3.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_4_volume")) == 0)
+		{
+			mSliderGainInput4.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_5_volume")) == 0)
+		{
+			mSliderGainInput5.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+		else if(element.Compare(CString("audio_input_6_volume")) == 0)
+		{
+			mSliderGainInput6.SetPos(value);
+			handleVolumeSliderMovement(value,1);
+			return;
+		}
+	}
 }
 
 void CSwitcherPanelDlg::changeGuiElement(CString element, CString value)
 {
+	/*
+		Text Fields
+	*/
+
+	if(element.Compare(CString("vlc_1_edit_port")) == 0)
+	{
+		mEditVlcPort1.SetWindowTextW(value);
+		return;
+	}
+	else if(element.Compare(CString("vlc_2_edit_port")) == 0)
+	{
+		mEditVlcPort2.SetWindowTextW(value);
+		return;
+	}
+	else if(element.Compare(CString("vlc_3_edit_port")) == 0)
+	{
+		mEditVlcPort3.SetWindowTextW(value);
+		return;
+	}
 }
 
 void CSwitcherPanelDlg::changeGuiElement(CString element, bool value)
@@ -2533,4 +2620,221 @@ void CSwitcherPanelDlg::printGuiServerLine(CString line)
 void CSwitcherPanelDlg::printGuiServerLine(char* line)
 {
 	printGuiServerLine(CString(line));
+}
+
+void CSwitcherPanelDlg::printGuiClientLine(CString line)
+{
+	mEditGuiClient.SetWindowText(line);
+}
+
+void CSwitcherPanelDlg::printGuiClientLine(char* line)
+{
+	printGuiClientLine(CString(line));
+}
+
+
+void CSwitcherPanelDlg::handleTransitionSliderMovement(int pos)
+{
+	double position = pos / sliderRange;			// convert to [0 .. 1] range
+	if (mMoveSliderDownwards)
+		position = (sliderRange - pos) / sliderRange;	// deal with flipped slider handle position
+	mMixEffectBlock->SetFloat(bmdSwitcherMixEffectBlockPropertyIdTransitionPosition, position);
+}
+
+
+CString CSwitcherPanelDlg::getGuiServerIp()
+{
+	CString ips=_T("");
+
+	WSAData wsaData;
+    if (WSAStartup(0x0101, &wsaData) != 0) {
+		_cprintf("WSAStartup failed\n");
+        return ips;
+    }
+
+    char ac[80];
+    if (gethostname(ac, sizeof(ac)) == SOCKET_ERROR) {
+		_cprintf("gethostname failed: SOCKET_ERROR\n");
+		return ips;
+    }
+    _cprintf("Gui Server Hostname: %s\n",ac);
+
+    struct hostent *phe = gethostbyname(ac);
+    if (phe == 0) {
+		_cprintf("gethostbyname failed: struct hostent = 0\n");
+        return ips;
+    }
+
+    for (int i = 0; phe->h_addr_list[i] != 0; ++i) {
+        struct in_addr addr;
+        memcpy(&addr, phe->h_addr_list[i], sizeof(struct in_addr));
+		_cprintf("Gui Server IP: %s\n",inet_ntoa(addr));
+		
+		if(!ips.IsEmpty())
+			ips += ", ";
+		ips += inet_ntoa(addr);
+    }
+
+	 WSACleanup();
+    
+	return ips;
+}
+
+void CSwitcherPanelDlg::OnBnClickedButtonGuiServerConnect()
+{
+	int success;
+	CString line=CString("Server Online");
+	CString port;
+	mEditGuiServerPort.GetWindowTextW(port);
+	if((success = initGuiServer(CStringHandler::intfromCString(port))) == 0)
+	{
+		_beginthread(static_receiveGuiUdpMessages, 0, this);
+		_cprintf("Server Online\n");
+	}
+	else
+	{
+		_cprintf("Server Error: %d\n\n",success);
+		line.Format(_T("Server Error: %d"),success);
+	}
+	printGuiServerLine(line);
+}
+
+
+void CSwitcherPanelDlg::OnBnClickedButtonGuiClientConnect()
+{
+	int success;
+	CString line=CString("Client Online");
+	CString port;
+	mEditGuiClientPort.GetWindowTextW(port);
+	CString ip;
+	mEditGuiClientIp.GetWindowTextW(ip);
+
+	if((success = guiClient.initClient(ip,port)) == 0)
+	{
+		_cprintf("Client Online\n");
+	}
+	else
+	{
+		_cprintf("Client Error: %d\n\n",success);
+		line.Format(_T("Client Error: %d"),success);
+	}
+	printGuiClientLine(line);
+
+	guiClient.sendCommand("Hallo!");
+}
+
+void CSwitcherPanelDlg::sendGuiActionCommand(CString command)
+{
+	_cprintf("\nGui Action Command: '%s'\n",CStringHandler::charsfromCString(command));
+	guiClient.sendCommand(command);
+}
+
+void CSwitcherPanelDlg::sendGuiSwitcherInputChanged(int inputID, char* prefix)
+{
+	sendGuiActionCommand(CString(prefix)+getInputNameFromID(inputID)+CString("#"));
+}
+
+void CSwitcherPanelDlg::sendGuiIntegerCommand(int value, char* command)
+{
+	CString s;
+	s.Format(_T("#n%d"),value);
+	sendGuiActionCommand(CString(command)+s);
+}
+
+void CSwitcherPanelDlg::sendGuiStringCommand(char* value, char* command)
+{
+	sendGuiActionCommand(CString(command)+CString("#+")+CString(value));
+}
+
+CString CSwitcherPanelDlg::getInputNameFromID(int inputID)
+{
+	switch(inputID)
+	{
+		case INPUT_Black:
+			return CString("input_black");
+		break;
+		case INPUT_C1:
+			return CString("input_1");
+		break;
+		case INPUT_C2:
+			return CString("input_2");
+		break;
+		case INPUT_C3:
+			return CString("input_3");
+		break;
+		case INPUT_C4:
+			return CString("input_4");
+		break;
+		case INPUT_C5:
+			return CString("input_5");
+		break;
+		case INPUT_C6:
+			return CString("input_6");
+		break;
+		case INPUT_Color_Bars:
+			return CString("input_bars");
+		break;
+		case INPUT_Color_1:
+			return CString("color_1");
+		break;
+		case INPUT_Color_2:
+			return CString("color_2");
+		break;
+		case INPUT_Media_Player_1:
+			return CString("media_1");
+		break;
+		case INPUT_Media_Player_2:
+			return CString("media_2");
+		break;
+	}
+	return CString();
+}
+
+
+void CSwitcherPanelDlg::handleMasterSliderMovement(int pos)
+{
+	double position = pos / sliderRange;
+	position = maxGain - position*minGain;
+	CString line;
+	line.Format(_T("%.2fdB"),position);
+	mEditMasterVolume.SetWindowTextW(line);
+	mAudioMixer->SetProgramOutGain(position);
+}
+
+void CSwitcherPanelDlg::handleVolumeSliderMovement(int value,int sliderID)
+{
+}
+
+void CSwitcherPanelDlg::sendGuiButtonClick(char* buttonname)
+{
+	sendGuiActionCommand(CString(buttonname)+CString("#"));
+}
+
+void CSwitcherPanelDlg::sendGuiButtonClick(CString buttonname)
+{
+	sendGuiActionCommand(buttonname+CString("#"));
+}
+
+
+void CSwitcherPanelDlg::OnEnChangeEditVlcPort1()
+{
+	CString port;
+	mEditVlcPort1.GetWindowTextW(port);
+	sendGuiStringCommand(CStringHandler::charsfromCString(port),"vlc_1_edit_port");
+}
+
+
+void CSwitcherPanelDlg::OnEnChangeEditVlcPort2()
+{
+	CString port;
+	mEditVlcPort2.GetWindowTextW(port);
+	sendGuiStringCommand(CStringHandler::charsfromCString(port),"vlc_2_edit_port");
+}
+
+
+void CSwitcherPanelDlg::OnEnChangeEditVlcPort3()
+{
+	CString port;
+	mEditVlcPort3.GetWindowTextW(port);
+	sendGuiStringCommand(CStringHandler::charsfromCString(port),"vlc_3_edit_port");
 }

@@ -2,65 +2,10 @@
 
 VlcHttpConnection::VlcHttpConnection(CString ip, CString port)
 {
-	char* vlcIp = ipfromCString(ip);
-	int vlcPort = intfromCString(port);
-	success = initServer(ipfromCString(ip), intfromCString(port));
+	success = initServer(CStringHandler::ipfromCString(ip), CStringHandler::intfromCString(port));
 	isPaused=true;
 }
 
-int VlcHttpConnection::intfromCString(CString str)
-{
-	LPWSTR cstr = str.GetBuffer(str.GetLength());
-	int num=0;
-
-	for(int i=0; ; i++)
-	{
-		if(cstr[i] >= '0' && cstr[i] <= '9')
-		{
-			num *= 10;
-			num += (int)cstr[i] - (int)'0';
-		}
-		else
-		{
-			return num;
-		}
-	}
-
-	return 0;
-}
-
-char* VlcHttpConnection::ipfromCString(CString str)
-{
-	LPWSTR cstr = str.GetBuffer(str.GetLength());
-	char* l = (char*)malloc(str.GetLength()+1);
-	int n=0;
-
-	for(int i=0; i<str.GetLength(); i++)
-	{
-		if((cstr[i] >= '0' && cstr[i] <= '9') || cstr[i] == '.')
-		{
-			l[n++] = cstr[i];
-		}
-	}
-	l[n] = 0;
-
-	return l;
-}
-
-char* VlcHttpConnection::charsfromCString(CString str)
-{
-	LPWSTR cstr = str.GetBuffer(str.GetLength());
-	char* l = (char*)malloc(str.GetLength()+1);
-	int n=0;
-
-	for(int i=0; i<str.GetLength(); i++)
-	{
-		l[n++] = cstr[i];
-	}
-	l[n] = 0;
-
-	return l;
-}
 
 VlcHttpConnection::~VlcHttpConnection(void)
 {
@@ -118,7 +63,7 @@ CString VlcHttpConnection::sendRequest(char* request)
 CString VlcHttpConnection::sendRequest(CString request)
 {
 	CString r = "GET /requests/"+request+" HTTP/1.1\r\n\r\n";
-	char* rc = charsfromCString(r);
+	char* rc = CStringHandler::charsfromCString(r);
 	_cprintf("Sending Request '%s'\n",rc);
 	if (send(Socket, rc, r.GetLength(), 0) != (int)r.GetLength()) {
 		httpError = HTTP_ERROR_SEND_FAILED;

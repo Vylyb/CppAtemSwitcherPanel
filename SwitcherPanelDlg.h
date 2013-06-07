@@ -35,6 +35,7 @@
 #include "afxcmn.h"
 
 #include "VlcHttpConnection.h"
+#include "guiclient.h"
 
 #define NUM_INPUTS	6
 
@@ -284,9 +285,7 @@ public:
 	CButton mButtonVlcPause1;
 	CButton mButtonVlcPlayNext1;
 	afx_msg void OnBnClickedVlcPlaySelected1();
-//	afx_msg void OnBnClickedVlcPlayLast1();
 	afx_msg void OnBnClickedVlcPause1();
-//	afx_msg void OnBnClickedVlcPlayNext1();
 	afx_msg void OnLvnItemchangedListVlcPlaylist1(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedRadioVlcStartWithTransition1();
 	afx_msg void OnBnClickedRadioVlcStartAtTransitionEnd1();
@@ -329,7 +328,6 @@ public:
 private:
 	void initVlcConnection(CString port, int vlcId);
 	void moveTestSlider(int value);
-	char*	charsfromCString(CString str);
 public:
 	CSliderCtrl mTestSlider;
 private:
@@ -340,9 +338,10 @@ private:
 	SOCKET			acceptSocket;
 	SOCKADDR_IN		addr;
 	char			reuseAddress;
-	int				port;
-//	int				client_fd;
+	int				guiServerPort;
+	char*			guiServerIp;
 	struct sockaddr_storage		incming_info;
+	CString			getGuiServerIp();
 	int				initGuiServer(int port);
 	void			cleanUpGuiServer(void);
 	static void		static_receiveGuiUdpMessages(void * args);
@@ -357,9 +356,35 @@ public:
 private:
 	void printGuiServerLine(CString line);
 	void printGuiServerLine(char* line);
+	void printGuiClientLine(CString line);
+	void printGuiClientLine(char* line);
 	bool mBoolEnableSwitcherMixBlock;
 	CButton mButtonConnectVlc2;
 	CButton mButtonConnectVlc3;
 	bool mBoolVlc1Enabled;
 	bool mBoolVlc2Enabled;
+	void handleTransitionSliderMovement(int pos);
+	GuiClient guiClient;
+public:
+	CEdit mEditGuiClientIp;
+	CEdit mEditGuiClientPort;
+	CEdit mEditGuiServerIp;
+	CEdit mEditGuiServerPort;
+	CEdit mEditGuiClient;
+	afx_msg void OnBnClickedButtonGuiClientConnect();
+	afx_msg void OnBnClickedButtonGuiServerConnect();
+private:
+	void sendGuiActionCommand(CString command);
+	void sendGuiSwitcherInputChanged(int inputID, char* prefix);
+	CString getInputNameFromID(int inputID);
+	void handleMasterSliderMovement(int pos);
+	void handleVolumeSliderMovement(int value,int sliderID);
+	void sendGuiIntegerCommand(int value, char* command);
+	void sendGuiStringCommand(char* value, char* command);
+	void sendGuiButtonClick(char* buttonname);
+	void sendGuiButtonClick(CString buttonname);
+public:
+	afx_msg void OnEnChangeEditVlcPort1();
+	afx_msg void OnEnChangeEditVlcPort2();
+	afx_msg void OnEnChangeEditVlcPort3();
 };
