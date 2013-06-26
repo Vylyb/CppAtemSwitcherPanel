@@ -670,7 +670,7 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 		MessageBox(_T("Failed to create the console!"), _T("Error"));
 
 	standardFont.CreatePointFont(100, _T("Arial"));
-	enhancedFont.CreatePointFont(160, _T("Arial Black"));
+	enhancedFont.CreatePointFont(110, _T("Arial Black"));
 
 	mSwitcherDiscovery = NULL;
 	mSwitcher = NULL;
@@ -716,8 +716,8 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 		currentGainInputs.push_back(0.0);
 	}
 
-	mEditAddress.SetWindowText(_T("192.168.1.123"));
-//	mEditAddress.SetWindowText(_T("141.64."));
+//	mEditAddress.SetWindowText(_T("192.168.1.123"));
+	mEditAddress.SetWindowText(_T("141.64.52.244"));
 
 	/*
 		VLC
@@ -760,7 +760,7 @@ BOOL CSwitcherPanelDlg::OnInitDialog()
 	*/
 	guiClient = GuiClient();
 	mEditGuiClientPort.SetWindowTextW(_T("9000"));
-	mEditGuiClientIp.SetWindowTextW(_T("192.168.56.1"));
+	mEditGuiClientIp.SetWindowTextW(_T("127.0.0.1"));
 	printGuiClientLine("Client Offline");
 
 	return TRUE;				// return TRUE unless you set the focus to a control

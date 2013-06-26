@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 8.00.0595 */
-/* at Sun Jun 02 22:42:07 2013
+/* at Sat Jun 08 13:38:44 2013
  */
 /* Compiler settings for ..\..\include\BMDSwitcherAPI.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0595 
@@ -123,20 +123,6 @@ typedef interface IBMDSwitcherKeyPatternParametersCallback IBMDSwitcherKeyPatter
 typedef interface IBMDSwitcherKeyPatternParameters IBMDSwitcherKeyPatternParameters;
 
 #endif 	/* __IBMDSwitcherKeyPatternParameters_FWD_DEFINED__ */
-
-
-#ifndef __IBMDSwitcherKeyFlyKeyFrameParametersCallback_FWD_DEFINED__
-#define __IBMDSwitcherKeyFlyKeyFrameParametersCallback_FWD_DEFINED__
-typedef interface IBMDSwitcherKeyFlyKeyFrameParametersCallback IBMDSwitcherKeyFlyKeyFrameParametersCallback;
-
-#endif 	/* __IBMDSwitcherKeyFlyKeyFrameParametersCallback_FWD_DEFINED__ */
-
-
-#ifndef __IBMDSwitcherKeyFlyKeyFrameParameters_FWD_DEFINED__
-#define __IBMDSwitcherKeyFlyKeyFrameParameters_FWD_DEFINED__
-typedef interface IBMDSwitcherKeyFlyKeyFrameParameters IBMDSwitcherKeyFlyKeyFrameParameters;
-
-#endif 	/* __IBMDSwitcherKeyFlyKeyFrameParameters_FWD_DEFINED__ */
 
 
 #ifndef __IBMDSwitcherKeyFlyParametersCallback_FWD_DEFINED__
@@ -550,13 +536,6 @@ typedef struct CBMDSwitcherDiscovery CBMDSwitcherDiscovery;
 #endif 	/* __CBMDSwitcherDiscovery_FWD_DEFINED__ */
 
 
-#ifndef __IBMDSwitcherKeyFlyParameters_v3_5_FWD_DEFINED__
-#define __IBMDSwitcherKeyFlyParameters_v3_5_FWD_DEFINED__
-typedef interface IBMDSwitcherKeyFlyParameters_v3_5 IBMDSwitcherKeyFlyParameters_v3_5;
-
-#endif 	/* __IBMDSwitcherKeyFlyParameters_v3_5_FWD_DEFINED__ */
-
-
 /* header files for imported files */
 #include "unknwn.h"
 
@@ -588,8 +567,7 @@ enum _BMDSwitcherPropertyId
     {
         bmdSwitcherPropertyIdProductName	= 0x70646e6d,
         bmdSwitcherPropertyIdVideoMode	= 0x76646d64,
-        bmdSwitcherPropertyIdDownConvertMode	= 0x64636d64,
-        bmdSwitcherPropertyIdPowerStatus	= 0x70777273
+        bmdSwitcherPropertyIdDownConvertMode	= 0x64636d64
     } 	BMDSwitcherPropertyId;
 
 typedef /* [v1_enum] */ 
@@ -616,8 +594,7 @@ enum _BMDSwitcherPortType
         bmdSwitcherPortTypeMediaPlayerCut	= 0x6d706374,
         bmdSwitcherPortTypeSuperSource	= 0x73737263,
         bmdSwitcherPortTypeMixEffectBlockOutput	= 0x6d65626f,
-        bmdSwitcherPortTypeAuxOutput	= 0x6175786f,
-        bmdSwitcherPortTypeKeyCutOutput	= 0x6b63746f
+        bmdSwitcherPortTypeAuxOutput	= 0x6175786f
     } 	BMDSwitcherPortType;
 
 typedef /* [v1_enum] */ 
@@ -793,9 +770,7 @@ enum _BMDSwitcherMixEffectBlockPropertyId
         bmdSwitcherMixEffectBlockPropertyIdPreviewLive	= 0x70766c76,
         bmdSwitcherMixEffectBlockPropertyIdPreviewTransition	= 0x70767473,
         bmdSwitcherMixEffectBlockPropertyIdInputAvailabilityMask	= 0x6961766d,
-        bmdSwitcherMixEffectBlockPropertyIdFadeToBlackRate	= 0x66746272,
-        bmdSwitcherMixEffectBlockPropertyIdFadeToBlackFullyBlack	= 0x66746262,
-        bmdSwitcherMixEffectBlockPropertyIdFadeToBlackInTransition	= 0x66746274
+        bmdSwitcherMixEffectBlockPropertyIdFadeToBlackRate	= 0x66746272
     } 	BMDSwitcherMixEffectBlockPropertyId;
 
 typedef /* [v1_enum] */ 
@@ -892,27 +867,6 @@ enum _BMDSwitcherKeyPatternParametersEventType
         bmdSwitcherKeyPatternParametersEventTypeVerticalOffsetChanged	= 0x76746f43,
         bmdSwitcherKeyPatternParametersEventTypeInverseChanged	= 0x696e7643
     } 	BMDSwitcherKeyPatternParametersEventType;
-
-typedef /* [v1_enum] */ 
-enum _BMDSwitcherKeyFlyKeyFrameParametersEventType
-    {
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeSizeXChanged	= 0x66737a78,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeSizeYChanged	= 0x66737a79,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypePositionXChanged	= 0x66707378,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypePositionYChanged	= 0x66707379,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeRotationChanged	= 0x66726f74,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderWidthOutChanged	= 0x6662776f,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderWidthInChanged	= 0x66627769,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderSoftnessOutChanged	= 0x6662736f,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderSoftnessInChanged	= 0x66627369,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderBevelSoftnessChanged	= 0x66626273,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderBevelPositionChanged	= 0x66626270,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderHueChanged	= 0x66626875,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderSaturationChanged	= 0x66627374,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderLumaChanged	= 0x66626c6d,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderLightSourceDirectionChanged	= 0x66626c64,
-        BMDSwitcherKeyFlyKeyFrameParametersEventTypeBorderLightSourceAltitudeChanged	= 0x66626c61
-    } 	BMDSwitcherKeyFlyKeyFrameParametersEventType;
 
 typedef /* [v1_enum] */ 
 enum _BMDSwitcherKeyFlyParametersEventType
@@ -1012,11 +966,7 @@ enum _BMDSwitcherVideoMode
         bmdSwitcherVideoMode720p50	= 0x37327030,
         bmdSwitcherVideoMode720p5994	= 0x37327039,
         bmdSwitcherVideoMode1080i50	= 0x31306930,
-        bmdSwitcherVideoMode1080i5994	= 0x31306939,
-        bmdSwitcherVideoMode4KHDp2398	= 0x34483233,
-        bmdSwitcherVideoMode4KHDp24	= 0x34483234,
-        bmdSwitcherVideoMode4KHDp25	= 0x34483235,
-        bmdSwitcherVideoMode4KHDp2997	= 0x34483239
+        bmdSwitcherVideoMode1080i5994	= 0x31306939
     } 	BMDSwitcherVideoMode;
 
 typedef /* [v1_enum] */ 
@@ -1026,13 +976,6 @@ enum _BMDSwitcherDownConverterMode
         bmdSwitcherDownConverterModeLetterbox	= 0x64636c62,
         bmdSwitcherDownConverterModeAnamorphic	= 0x6463616d
     } 	BMDSwitcherDownConverterMode;
-
-typedef /* [v1_enum] */ 
-enum _BMDSwitcherPowerStatus
-    {
-        bmdSwitcherPowerStatusSupply1	= 0x1,
-        bmdSwitcherPowerStatusSupply2	= 0x2
-    } 	BMDSwitcherPowerStatus;
 
 typedef /* [v1_enum] */ 
 enum _BMDSwitcherPixelFormat
@@ -1171,17 +1114,12 @@ enum _BMDSwitcherMediaPoolEventType
         bmdSwitcherMediaPoolEventTypeNameChanged	= 0x6e616d65,
         bmdSwitcherMediaPoolEventTypeHashChanged	= 0x68617368,
         bmdSwitcherMediaPoolEventTypeAudioValidChanged	= 0x61766c64,
-        bmdSwitcherMediaPoolEventTypeAudioNameChanged	= 0x616e6d65,
-        bmdSwitcherMediaPoolEventTypeAudioHashChanged	= 0x61687368,
         bmdSwitcherMediaPoolEventTypeLockBusy	= 0x6c627379,
         bmdSwitcherMediaPoolEventTypeLockIdle	= 0x6c69646c,
         bmdSwitcherMediaPoolEventTypeTransferCompleted	= 0x636d7074,
         bmdSwitcherMediaPoolEventTypeTransferCancelled	= 0x636e636c,
         bmdSwitcherMediaPoolEventTypeTransferFailed	= 0x6661696c
     } 	BMDSwitcherMediaPoolEventType;
-
-
-
 
 
 
@@ -2967,596 +2905,6 @@ EXTERN_C const IID IID_IBMDSwitcherKeyPatternParameters;
 #endif 	/* __IBMDSwitcherKeyPatternParameters_INTERFACE_DEFINED__ */
 
 
-#ifndef __IBMDSwitcherKeyFlyKeyFrameParametersCallback_INTERFACE_DEFINED__
-#define __IBMDSwitcherKeyFlyKeyFrameParametersCallback_INTERFACE_DEFINED__
-
-/* interface IBMDSwitcherKeyFlyKeyFrameParametersCallback */
-/* [helpstring][uuid][object] */ 
-
-
-EXTERN_C const IID IID_IBMDSwitcherKeyFlyKeyFrameParametersCallback;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("136BDD85-690B-4691-BA1D-AB8A61F97AE0")
-    IBMDSwitcherKeyFlyKeyFrameParametersCallback : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE Notify( 
-            /* [in] */ BMDSwitcherKeyFlyKeyFrameParametersEventType eventType) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IBMDSwitcherKeyFlyKeyFrameParametersCallbackVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IBMDSwitcherKeyFlyKeyFrameParametersCallback * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IBMDSwitcherKeyFlyKeyFrameParametersCallback * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IBMDSwitcherKeyFlyKeyFrameParametersCallback * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *Notify )( 
-            IBMDSwitcherKeyFlyKeyFrameParametersCallback * This,
-            /* [in] */ BMDSwitcherKeyFlyKeyFrameParametersEventType eventType);
-        
-        END_INTERFACE
-    } IBMDSwitcherKeyFlyKeyFrameParametersCallbackVtbl;
-
-    interface IBMDSwitcherKeyFlyKeyFrameParametersCallback
-    {
-        CONST_VTBL struct IBMDSwitcherKeyFlyKeyFrameParametersCallbackVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IBMDSwitcherKeyFlyKeyFrameParametersCallback_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParametersCallback_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParametersCallback_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IBMDSwitcherKeyFlyKeyFrameParametersCallback_Notify(This,eventType)	\
-    ( (This)->lpVtbl -> Notify(This,eventType) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IBMDSwitcherKeyFlyKeyFrameParametersCallback_INTERFACE_DEFINED__ */
-
-
-#ifndef __IBMDSwitcherKeyFlyKeyFrameParameters_INTERFACE_DEFINED__
-#define __IBMDSwitcherKeyFlyKeyFrameParameters_INTERFACE_DEFINED__
-
-/* interface IBMDSwitcherKeyFlyKeyFrameParameters */
-/* [helpstring][uuid][object] */ 
-
-
-EXTERN_C const IID IID_IBMDSwitcherKeyFlyKeyFrameParameters;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("A6B8530A-B0C3-4304-8172-6D5ED93989B1")
-    IBMDSwitcherKeyFlyKeyFrameParameters : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetSizeX( 
-            /* [out] */ double *multiplierX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSizeX( 
-            /* [in] */ double multiplierX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSizeY( 
-            /* [out] */ double *multiplierY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSizeY( 
-            /* [in] */ double multiplierY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPositionX( 
-            /* [out] */ double *offsetX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPositionX( 
-            /* [in] */ double offsetX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPositionY( 
-            /* [out] */ double *offsetY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPositionY( 
-            /* [in] */ double offsetY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRotation( 
-            /* [out] */ double *degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRotation( 
-            /* [in] */ double degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderWidthOut( 
-            /* [out] */ double *widthOut) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderWidthOut( 
-            /* [in] */ double widthOut) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderWidthIn( 
-            /* [out] */ double *widthIn) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderWidthIn( 
-            /* [in] */ double widthIn) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderSoftnessOut( 
-            /* [out] */ double *softOut) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderSoftnessOut( 
-            /* [in] */ double softOut) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderSoftnessIn( 
-            /* [out] */ double *softIn) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderSoftnessIn( 
-            /* [in] */ double softIn) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderBevelSoftness( 
-            /* [out] */ double *bevelSoft) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderBevelSoftness( 
-            /* [in] */ double bevelSoft) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderBevelPosition( 
-            /* [out] */ double *bevelPosition) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderBevelPosition( 
-            /* [in] */ double bevelPosition) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderOpacity( 
-            /* [out] */ double *opacity) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderOpacity( 
-            /* [in] */ double opacity) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderHue( 
-            /* [out] */ double *hue) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderHue( 
-            /* [in] */ double hue) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderSaturation( 
-            /* [out] */ double *sat) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderSaturation( 
-            /* [in] */ double sat) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderLuma( 
-            /* [out] */ double *luma) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderLuma( 
-            /* [in] */ double luma) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderLightSourceDirection( 
-            /* [out] */ double *degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderLightSourceDirection( 
-            /* [in] */ double degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetBorderLightSourceAltitude( 
-            /* [out] */ double *altitude) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetBorderLightSourceAltitude( 
-            /* [in] */ double altitude) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaskTop( 
-            /* [out] */ double *top) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaskTop( 
-            /* [in] */ double top) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaskBottom( 
-            /* [out] */ double *bottom) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaskBottom( 
-            /* [in] */ double bottom) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaskLeft( 
-            /* [out] */ double *left) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaskLeft( 
-            /* [in] */ double left) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetMaskRight( 
-            /* [out] */ double *right) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetMaskRight( 
-            /* [in] */ double right) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddCallback( 
-            /* [in] */ IBMDSwitcherKeyFlyKeyFrameParametersCallback *callback) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveCallback( 
-            /* [in] */ IBMDSwitcherKeyFlyKeyFrameParametersCallback *callback) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IBMDSwitcherKeyFlyKeyFrameParametersVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSizeX )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *multiplierX);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSizeX )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double multiplierX);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSizeY )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *multiplierY);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSizeY )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double multiplierY);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPositionX )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *offsetX);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPositionX )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double offsetX);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPositionY )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *offsetY);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPositionY )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double offsetY);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRotation )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRotation )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderWidthOut )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *widthOut);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderWidthOut )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double widthOut);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderWidthIn )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *widthIn);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderWidthIn )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double widthIn);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderSoftnessOut )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *softOut);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderSoftnessOut )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double softOut);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderSoftnessIn )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *softIn);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderSoftnessIn )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double softIn);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderBevelSoftness )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *bevelSoft);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderBevelSoftness )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double bevelSoft);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderBevelPosition )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *bevelPosition);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderBevelPosition )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double bevelPosition);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderOpacity )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *opacity);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderOpacity )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double opacity);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderHue )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *hue);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderHue )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double hue);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderSaturation )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *sat);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderSaturation )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double sat);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderLuma )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *luma);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderLuma )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double luma);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderLightSourceDirection )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderLightSourceDirection )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetBorderLightSourceAltitude )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *altitude);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetBorderLightSourceAltitude )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double altitude);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaskTop )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *top);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaskTop )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double top);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaskBottom )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *bottom);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaskBottom )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double bottom);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaskLeft )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *left);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaskLeft )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double left);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetMaskRight )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [out] */ double *right);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetMaskRight )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ double right);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddCallback )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ IBMDSwitcherKeyFlyKeyFrameParametersCallback *callback);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveCallback )( 
-            IBMDSwitcherKeyFlyKeyFrameParameters * This,
-            /* [in] */ IBMDSwitcherKeyFlyKeyFrameParametersCallback *callback);
-        
-        END_INTERFACE
-    } IBMDSwitcherKeyFlyKeyFrameParametersVtbl;
-
-    interface IBMDSwitcherKeyFlyKeyFrameParameters
-    {
-        CONST_VTBL struct IBMDSwitcherKeyFlyKeyFrameParametersVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetSizeX(This,multiplierX)	\
-    ( (This)->lpVtbl -> GetSizeX(This,multiplierX) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetSizeX(This,multiplierX)	\
-    ( (This)->lpVtbl -> SetSizeX(This,multiplierX) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetSizeY(This,multiplierY)	\
-    ( (This)->lpVtbl -> GetSizeY(This,multiplierY) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetSizeY(This,multiplierY)	\
-    ( (This)->lpVtbl -> SetSizeY(This,multiplierY) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetPositionX(This,offsetX)	\
-    ( (This)->lpVtbl -> GetPositionX(This,offsetX) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetPositionX(This,offsetX)	\
-    ( (This)->lpVtbl -> SetPositionX(This,offsetX) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetPositionY(This,offsetY)	\
-    ( (This)->lpVtbl -> GetPositionY(This,offsetY) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetPositionY(This,offsetY)	\
-    ( (This)->lpVtbl -> SetPositionY(This,offsetY) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetRotation(This,degrees)	\
-    ( (This)->lpVtbl -> GetRotation(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetRotation(This,degrees)	\
-    ( (This)->lpVtbl -> SetRotation(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderWidthOut(This,widthOut)	\
-    ( (This)->lpVtbl -> GetBorderWidthOut(This,widthOut) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderWidthOut(This,widthOut)	\
-    ( (This)->lpVtbl -> SetBorderWidthOut(This,widthOut) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderWidthIn(This,widthIn)	\
-    ( (This)->lpVtbl -> GetBorderWidthIn(This,widthIn) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderWidthIn(This,widthIn)	\
-    ( (This)->lpVtbl -> SetBorderWidthIn(This,widthIn) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderSoftnessOut(This,softOut)	\
-    ( (This)->lpVtbl -> GetBorderSoftnessOut(This,softOut) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderSoftnessOut(This,softOut)	\
-    ( (This)->lpVtbl -> SetBorderSoftnessOut(This,softOut) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderSoftnessIn(This,softIn)	\
-    ( (This)->lpVtbl -> GetBorderSoftnessIn(This,softIn) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderSoftnessIn(This,softIn)	\
-    ( (This)->lpVtbl -> SetBorderSoftnessIn(This,softIn) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderBevelSoftness(This,bevelSoft)	\
-    ( (This)->lpVtbl -> GetBorderBevelSoftness(This,bevelSoft) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderBevelSoftness(This,bevelSoft)	\
-    ( (This)->lpVtbl -> SetBorderBevelSoftness(This,bevelSoft) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderBevelPosition(This,bevelPosition)	\
-    ( (This)->lpVtbl -> GetBorderBevelPosition(This,bevelPosition) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderBevelPosition(This,bevelPosition)	\
-    ( (This)->lpVtbl -> SetBorderBevelPosition(This,bevelPosition) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderOpacity(This,opacity)	\
-    ( (This)->lpVtbl -> GetBorderOpacity(This,opacity) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderOpacity(This,opacity)	\
-    ( (This)->lpVtbl -> SetBorderOpacity(This,opacity) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderHue(This,hue)	\
-    ( (This)->lpVtbl -> GetBorderHue(This,hue) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderHue(This,hue)	\
-    ( (This)->lpVtbl -> SetBorderHue(This,hue) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderSaturation(This,sat)	\
-    ( (This)->lpVtbl -> GetBorderSaturation(This,sat) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderSaturation(This,sat)	\
-    ( (This)->lpVtbl -> SetBorderSaturation(This,sat) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderLuma(This,luma)	\
-    ( (This)->lpVtbl -> GetBorderLuma(This,luma) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderLuma(This,luma)	\
-    ( (This)->lpVtbl -> SetBorderLuma(This,luma) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderLightSourceDirection(This,degrees)	\
-    ( (This)->lpVtbl -> GetBorderLightSourceDirection(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderLightSourceDirection(This,degrees)	\
-    ( (This)->lpVtbl -> SetBorderLightSourceDirection(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetBorderLightSourceAltitude(This,altitude)	\
-    ( (This)->lpVtbl -> GetBorderLightSourceAltitude(This,altitude) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetBorderLightSourceAltitude(This,altitude)	\
-    ( (This)->lpVtbl -> SetBorderLightSourceAltitude(This,altitude) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetMaskTop(This,top)	\
-    ( (This)->lpVtbl -> GetMaskTop(This,top) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetMaskTop(This,top)	\
-    ( (This)->lpVtbl -> SetMaskTop(This,top) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetMaskBottom(This,bottom)	\
-    ( (This)->lpVtbl -> GetMaskBottom(This,bottom) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetMaskBottom(This,bottom)	\
-    ( (This)->lpVtbl -> SetMaskBottom(This,bottom) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetMaskLeft(This,left)	\
-    ( (This)->lpVtbl -> GetMaskLeft(This,left) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetMaskLeft(This,left)	\
-    ( (This)->lpVtbl -> SetMaskLeft(This,left) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_GetMaskRight(This,right)	\
-    ( (This)->lpVtbl -> GetMaskRight(This,right) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_SetMaskRight(This,right)	\
-    ( (This)->lpVtbl -> SetMaskRight(This,right) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_AddCallback(This,callback)	\
-    ( (This)->lpVtbl -> AddCallback(This,callback) ) 
-
-#define IBMDSwitcherKeyFlyKeyFrameParameters_RemoveCallback(This,callback)	\
-    ( (This)->lpVtbl -> RemoveCallback(This,callback) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IBMDSwitcherKeyFlyKeyFrameParameters_INTERFACE_DEFINED__ */
-
-
 #ifndef __IBMDSwitcherKeyFlyParametersCallback_INTERFACE_DEFINED__
 #define __IBMDSwitcherKeyFlyParametersCallback_INTERFACE_DEFINED__
 
@@ -3650,7 +2998,7 @@ EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("BB1D2964-F55B-491E-9C5D-8E43304C34FD")
+    MIDL_INTERFACE("C522E970-DDB1-4027-B492-F52C1DFA5D09")
     IBMDSwitcherKeyFlyParameters : public IUnknown
     {
     public:
@@ -3712,18 +3060,11 @@ EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters;
         virtual HRESULT STDMETHODCALLTYPE StoreAsKeyFrame( 
             /* [in] */ BMDSwitcherFlyKeyFrame keyFrame) = 0;
         
-        virtual HRESULT STDMETHODCALLTYPE ClearKeyFrame( 
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame) = 0;
-        
         virtual HRESULT STDMETHODCALLTYPE RunToKeyFrame( 
             /* [in] */ BMDSwitcherFlyKeyFrame destination) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE IsAtKeyFrames( 
             /* [out] */ BMDSwitcherFlyKeyFrame *keyFrames) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetKeyFrameParameters( 
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame,
-            /* [out] */ IBMDSwitcherKeyFlyKeyFrameParameters **keyFrameParameters) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE IsRunning( 
             /* [out] */ BOOL *isRunning,
@@ -3834,10 +3175,6 @@ EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters;
             IBMDSwitcherKeyFlyParameters * This,
             /* [in] */ BMDSwitcherFlyKeyFrame keyFrame);
         
-        HRESULT ( STDMETHODCALLTYPE *ClearKeyFrame )( 
-            IBMDSwitcherKeyFlyParameters * This,
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame);
-        
         HRESULT ( STDMETHODCALLTYPE *RunToKeyFrame )( 
             IBMDSwitcherKeyFlyParameters * This,
             /* [in] */ BMDSwitcherFlyKeyFrame destination);
@@ -3845,11 +3182,6 @@ EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters;
         HRESULT ( STDMETHODCALLTYPE *IsAtKeyFrames )( 
             IBMDSwitcherKeyFlyParameters * This,
             /* [out] */ BMDSwitcherFlyKeyFrame *keyFrames);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetKeyFrameParameters )( 
-            IBMDSwitcherKeyFlyParameters * This,
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame,
-            /* [out] */ IBMDSwitcherKeyFlyKeyFrameParameters **keyFrameParameters);
         
         HRESULT ( STDMETHODCALLTYPE *IsRunning )( 
             IBMDSwitcherKeyFlyParameters * This,
@@ -3947,17 +3279,11 @@ EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters;
 #define IBMDSwitcherKeyFlyParameters_StoreAsKeyFrame(This,keyFrame)	\
     ( (This)->lpVtbl -> StoreAsKeyFrame(This,keyFrame) ) 
 
-#define IBMDSwitcherKeyFlyParameters_ClearKeyFrame(This,keyFrame)	\
-    ( (This)->lpVtbl -> ClearKeyFrame(This,keyFrame) ) 
-
 #define IBMDSwitcherKeyFlyParameters_RunToKeyFrame(This,destination)	\
     ( (This)->lpVtbl -> RunToKeyFrame(This,destination) ) 
 
 #define IBMDSwitcherKeyFlyParameters_IsAtKeyFrames(This,keyFrames)	\
     ( (This)->lpVtbl -> IsAtKeyFrames(This,keyFrames) ) 
-
-#define IBMDSwitcherKeyFlyParameters_GetKeyFrameParameters(This,keyFrame,keyFrameParameters)	\
-    ( (This)->lpVtbl -> GetKeyFrameParameters(This,keyFrame,keyFrameParameters) ) 
 
 #define IBMDSwitcherKeyFlyParameters_IsRunning(This,isRunning,destination)	\
     ( (This)->lpVtbl -> IsRunning(This,isRunning,destination) ) 
@@ -12088,324 +11414,6 @@ EXTERN_C const CLSID CLSID_CBMDSwitcherDiscovery;
 class DECLSPEC_UUID("F2DC5149-9599-47E4-84B9-054C78A1A46D")
 CBMDSwitcherDiscovery;
 #endif
-
-#ifndef __IBMDSwitcherKeyFlyParameters_v3_5_INTERFACE_DEFINED__
-#define __IBMDSwitcherKeyFlyParameters_v3_5_INTERFACE_DEFINED__
-
-/* interface IBMDSwitcherKeyFlyParameters_v3_5 */
-/* [helpstring][uuid][object] */ 
-
-
-EXTERN_C const IID IID_IBMDSwitcherKeyFlyParameters_v3_5;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("C522E970-DDB1-4027-B492-F52C1DFA5D09")
-    IBMDSwitcherKeyFlyParameters_v3_5 : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE GetFly( 
-            /* [out] */ BOOL *isFlyKey) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFly( 
-            /* [in] */ BOOL isFlyKey) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetCanFly( 
-            /* [out] */ BOOL *canFly) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRate( 
-            /* [out] */ unsigned long *frames) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRate( 
-            /* [in] */ unsigned long frames) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSizeX( 
-            /* [out] */ double *multiplierX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSizeX( 
-            /* [in] */ double multiplierX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetSizeY( 
-            /* [out] */ double *multiplierY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetSizeY( 
-            /* [in] */ double multiplierY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPositionX( 
-            /* [out] */ double *offsetX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPositionX( 
-            /* [in] */ double offsetX) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetPositionY( 
-            /* [out] */ double *offsetY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetPositionY( 
-            /* [in] */ double offsetY) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE GetRotation( 
-            /* [out] */ double *degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetRotation( 
-            /* [in] */ double degrees) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ResetRotation( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ResetDVE( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE ResetDVEFull( void) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsKeyFrameStored( 
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame,
-            /* [out] */ BOOL *stored) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE StoreAsKeyFrame( 
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RunToKeyFrame( 
-            /* [in] */ BMDSwitcherFlyKeyFrame destination) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsAtKeyFrames( 
-            /* [out] */ BMDSwitcherFlyKeyFrame *keyFrames) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE IsRunning( 
-            /* [out] */ BOOL *isRunning,
-            /* [out] */ BMDSwitcherFlyKeyFrame *destination) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AddCallback( 
-            /* [in] */ IBMDSwitcherKeyFlyParametersCallback *callback) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE RemoveCallback( 
-            /* [in] */ IBMDSwitcherKeyFlyParametersCallback *callback) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct IBMDSwitcherKeyFlyParameters_v3_5Vtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetFly )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ BOOL *isFlyKey);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFly )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ BOOL isFlyKey);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetCanFly )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ BOOL *canFly);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRate )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ unsigned long *frames);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRate )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ unsigned long frames);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSizeX )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ double *multiplierX);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSizeX )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ double multiplierX);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetSizeY )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ double *multiplierY);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetSizeY )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ double multiplierY);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPositionX )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ double *offsetX);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPositionX )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ double offsetX);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetPositionY )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ double *offsetY);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetPositionY )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ double offsetY);
-        
-        HRESULT ( STDMETHODCALLTYPE *GetRotation )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ double *degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetRotation )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ double degrees);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetRotation )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetDVE )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *ResetDVEFull )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsKeyFrameStored )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame,
-            /* [out] */ BOOL *stored);
-        
-        HRESULT ( STDMETHODCALLTYPE *StoreAsKeyFrame )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ BMDSwitcherFlyKeyFrame keyFrame);
-        
-        HRESULT ( STDMETHODCALLTYPE *RunToKeyFrame )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ BMDSwitcherFlyKeyFrame destination);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsAtKeyFrames )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ BMDSwitcherFlyKeyFrame *keyFrames);
-        
-        HRESULT ( STDMETHODCALLTYPE *IsRunning )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [out] */ BOOL *isRunning,
-            /* [out] */ BMDSwitcherFlyKeyFrame *destination);
-        
-        HRESULT ( STDMETHODCALLTYPE *AddCallback )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ IBMDSwitcherKeyFlyParametersCallback *callback);
-        
-        HRESULT ( STDMETHODCALLTYPE *RemoveCallback )( 
-            IBMDSwitcherKeyFlyParameters_v3_5 * This,
-            /* [in] */ IBMDSwitcherKeyFlyParametersCallback *callback);
-        
-        END_INTERFACE
-    } IBMDSwitcherKeyFlyParameters_v3_5Vtbl;
-
-    interface IBMDSwitcherKeyFlyParameters_v3_5
-    {
-        CONST_VTBL struct IBMDSwitcherKeyFlyParameters_v3_5Vtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetFly(This,isFlyKey)	\
-    ( (This)->lpVtbl -> GetFly(This,isFlyKey) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetFly(This,isFlyKey)	\
-    ( (This)->lpVtbl -> SetFly(This,isFlyKey) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetCanFly(This,canFly)	\
-    ( (This)->lpVtbl -> GetCanFly(This,canFly) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetRate(This,frames)	\
-    ( (This)->lpVtbl -> GetRate(This,frames) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetRate(This,frames)	\
-    ( (This)->lpVtbl -> SetRate(This,frames) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetSizeX(This,multiplierX)	\
-    ( (This)->lpVtbl -> GetSizeX(This,multiplierX) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetSizeX(This,multiplierX)	\
-    ( (This)->lpVtbl -> SetSizeX(This,multiplierX) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetSizeY(This,multiplierY)	\
-    ( (This)->lpVtbl -> GetSizeY(This,multiplierY) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetSizeY(This,multiplierY)	\
-    ( (This)->lpVtbl -> SetSizeY(This,multiplierY) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetPositionX(This,offsetX)	\
-    ( (This)->lpVtbl -> GetPositionX(This,offsetX) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetPositionX(This,offsetX)	\
-    ( (This)->lpVtbl -> SetPositionX(This,offsetX) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetPositionY(This,offsetY)	\
-    ( (This)->lpVtbl -> GetPositionY(This,offsetY) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetPositionY(This,offsetY)	\
-    ( (This)->lpVtbl -> SetPositionY(This,offsetY) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_GetRotation(This,degrees)	\
-    ( (This)->lpVtbl -> GetRotation(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_SetRotation(This,degrees)	\
-    ( (This)->lpVtbl -> SetRotation(This,degrees) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_ResetRotation(This)	\
-    ( (This)->lpVtbl -> ResetRotation(This) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_ResetDVE(This)	\
-    ( (This)->lpVtbl -> ResetDVE(This) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_ResetDVEFull(This)	\
-    ( (This)->lpVtbl -> ResetDVEFull(This) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_IsKeyFrameStored(This,keyFrame,stored)	\
-    ( (This)->lpVtbl -> IsKeyFrameStored(This,keyFrame,stored) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_StoreAsKeyFrame(This,keyFrame)	\
-    ( (This)->lpVtbl -> StoreAsKeyFrame(This,keyFrame) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_RunToKeyFrame(This,destination)	\
-    ( (This)->lpVtbl -> RunToKeyFrame(This,destination) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_IsAtKeyFrames(This,keyFrames)	\
-    ( (This)->lpVtbl -> IsAtKeyFrames(This,keyFrames) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_IsRunning(This,isRunning,destination)	\
-    ( (This)->lpVtbl -> IsRunning(This,isRunning,destination) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_AddCallback(This,callback)	\
-    ( (This)->lpVtbl -> AddCallback(This,callback) ) 
-
-#define IBMDSwitcherKeyFlyParameters_v3_5_RemoveCallback(This,callback)	\
-    ( (This)->lpVtbl -> RemoveCallback(This,callback) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __IBMDSwitcherKeyFlyParameters_v3_5_INTERFACE_DEFINED__ */
-
 #endif /* __BMDSwitcherAPI_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */
